@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/LoginView.vue'
-import RegisterView from '../views/RegisterView.vue'
+import LoginView from '../views/auth/LoginView.vue'
+import RegisterView from '../views/auth/RegisterView.vue'
+import OtpView from '../views/auth/OtpView.vue'
 import Redirect from '../views/oauth/RedirectView.vue'
-import LogoutView from '../views/LogoutView.vue'
+import LogoutView from '../views/auth/LogoutView.vue'
+import FindPasswordView from '../views/auth/FindPasswordView.vue'
 import AdminView from '../views/admin/adminView.vue'
 
 const routes = [
@@ -27,6 +29,14 @@ const routes = [
   {
     path: '/register',
     component: RegisterView
+  },
+  {
+    path: '/otp',
+    component: OtpView
+  },
+  {
+    path: '/find/password',
+    component: FindPasswordView
   },
   {
     path: '/oauth2/redirect', 
