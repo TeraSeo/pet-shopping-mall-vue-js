@@ -7,8 +7,9 @@ async function login(email, password) {
     const response = await axios.get('http://localhost:9090/api/auth/login', {headers: { email: email, password: password }});
     if (response.data) {
       store.commit('setEmail', email);
-      router.push('/otp')
+      return true;
     }
+    return false;
   } catch(error) {
     console.log(error)
   }
@@ -74,8 +75,6 @@ async function checkIsLoggedIn() {
   try {
     const accessToken = store.state.accessToken; 
     const refreshToken = store.state.refreshToken;
-    console.log(accessToken)
-    console.log(refreshToken)
     const response = await axios.get('http://localhost:9090/api/product/test', {headers: { Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken }});
     const responseToken = response.headers['authorization'];
     if (responseToken != null) {
@@ -83,6 +82,9 @@ async function checkIsLoggedIn() {
         store.commit('setAccessToken', responseToken);
       }
     }
+
+    const res = await axios.get('http://localhost:9090/api/oauth/get/authority', {headers: { refreshToken: refreshToken }});
+    console.log("authorities: " + res.data)
     return true;
 
   } catch (error) {
