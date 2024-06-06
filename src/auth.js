@@ -11,7 +11,7 @@ async function login(email, password) {
     }
     return false;
   } catch(error) {
-    console.log(error)
+    return false;
   }
 }
 
@@ -24,10 +24,11 @@ async function register(username, email, password) {
     });
     if (response.data) {
       store.commit('setEmail', email);
-      router.push('/otp')
+      return true;
     }
+    return false;
   } catch(error) {
-    console.log(error)
+    return true;
   }
 }
 
@@ -37,37 +38,64 @@ async function sendOtp(email) {
       email: email
     });
   } catch(error) {
-    console.log(error)
+    return;
   }
 }
 
-async function checkOtp(email, otp) {
+async function checkOtp(email, otp, usage) {
+  try {
+    if (usage == "login") {
+      await checkOtpForLogin(email, otp);
+    }
+    else {
+      await checkOtpForResetPassword(email, otp);
+    }
+  } catch(error) {
+    return;
+  }
+}
+
+async function checkOtpForLogin(email, otp) {
   try {
     const response = await axios.get('http://localhost:9090/api/otp/checkOtp', {headers: { email: email, code: otp }});
     store.commit('setAccessToken', response.headers['authorization']);
     store.commit('setRefreshToken', response.headers['refresh']);
     if (response.data) {
+      store.commit('setVerifiedStatus', true);
       router.push("/")
     }
     else {
       alert('코드가 올바르지 않습니다!')
     }
   } catch(error) {
-    console.log(error)
+    return;
+  }
+}
+
+async function checkOtpForResetPassword(email, otp) {
+  try {
+    const response = await axios.get('http://localhost:9090/api/otp/checkOtp', {headers: { email: email, code: otp }});
+    if (response.data) {
+      store.commit('setVerifiedStatus', true);
+      router.push("/reset/password")
+    }
+    else {
+      alert('코드가 올바르지 않습니다!')
+    }
+  } catch(error) {
+    return;
   }
 }
 
 async function checkEmailExistence(email) {
   try {
     const response = await axios.get('http://localhost:9090/api/auth/email/valid', {headers: { email: email }});
-    if (response) {
-      alert('email is valid')
+    if (response.data) {
+      return true;
     }
-    else {
-      alert('email not valid')
-    }
+    return false;
   } catch(error) {
-    console.log(error)
+    return false;
   }
 }
 
@@ -88,7 +116,22 @@ async function checkIsLoggedIn() {
     return true;
 
   } catch (error) {
-    console.log("err: " + error);
+    return false;
+  }
+}
+
+async function resetPassword(email, password) {
+  try {
+    const response = await axios.put('http://localhost:9090/api/auth/reset/password', {
+      email: email,
+      password: password
+    });
+    if (response.data) {
+      return true;
+    }
+    return false;
+  } catch(error) {
+    console.log(error)
     return false;
   }
 }
@@ -97,4 +140,4 @@ async function checkIsAdmin() {
   return true;
 }
 
-export { login, register, sendOtp, checkOtp, checkEmailExistence, checkIsLoggedIn, checkIsAdmin }
+export { login, register, sendOtp, checkOtp, checkEmailExistence, resetPassword, checkIsLoggedIn, checkIsAdmin }

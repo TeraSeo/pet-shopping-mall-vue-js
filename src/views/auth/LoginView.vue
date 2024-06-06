@@ -11,7 +11,7 @@
                     <v-card-text>
                       <h2>Log in</h2>
                     </v-card-text>
-                    <v-form ref="login_form" v-model="valid" lazy-validation>
+                    <v-form ref="login_form" v-model="valid" lazy-validation @submit.prevent="login">
                       <v-text-field
                         label="Email"
                         v-model="email"
@@ -39,7 +39,7 @@
                         <span @click="goToRegister" style="cursor: pointer;" class="text-span">회원가입</span>
                       </v-col>
                       <v-col class="text-right">
-                        <span style="cursor: pointer;" @click="findPassword" class="text-span">비밀번호 찾기</span>
+                        <span style="cursor: pointer;" @click="findPassword" class="text-span">비밀번호 재설정</span>
                       </v-col>
                     </v-row>
                     <div class="divider my-4"></div>
@@ -113,7 +113,7 @@ export default {
       if (this.valid) {
         const res = await login(this.email, this.password)
         if (res) {
-          router.push("/otp")
+          router.push({ name: 'otp', params: { usage: 'login' } });
         } else {
           this.loginError = '로그인에 실패했습니다. 다시 시도해주세요.';
         }

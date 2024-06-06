@@ -9,9 +9,9 @@
                 <v-col>
                   <v-col>
                     <v-card-text>
-                      <h2>비밀번호 찾기</h2>
+                      <h2>이메일 확인</h2>
                     </v-card-text>
-                    <v-form ref="form" v-model="valid" lazy-validation>
+                    <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="resetPassword">
                       <v-text-field
                         label="Email"
                         v-model="email"
@@ -20,8 +20,11 @@
                         variant="solo-filled"
                         required
                       ></v-text-field>
-                      <v-btn class="login-btn" block @click="checkForm">찾기</v-btn>
+                      <v-btn class="login-btn" block @click="resetPassword">찾기</v-btn>
                     </v-form>
+                    <div class="ma-3" style="color: red">
+                      {{ emailError }}
+                    </div>
                     <v-row class="mt-3">
                         <v-col class="text-left">
                           <span @click="goToLogin" style="cursor: pointer;" class="text-span">로그인페이지로 이동</span>
@@ -48,15 +51,23 @@ export default {
     valid: false,
     emailRules: [v => /.+@.+/.test(v) || '이메일이 올바르지않습니다'],
     email: '',
+    emailError: ''
   }),
   created() {
     store.commit('clearToken');
   },
 
   methods: {
-    checkForm() {
+    async resetPassword() {
       if (this.valid) {
-        checkEmailExistence(this.email)
+        const isEmailExist = await checkEmailExistence(this.email)
+        if (isEmailExist) {
+          store.commit('setEmail', this.email);
+          router.push({ name: 'otp', params: { usage: 'reset-password' } });
+        }
+        else {
+          this.emailError = '이메일이 유효하지 않습니다.';
+        }
       }
     },
     goToLogin() {

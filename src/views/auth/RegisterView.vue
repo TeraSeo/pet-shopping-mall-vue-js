@@ -11,7 +11,7 @@
                     <v-card-text>
                       <h2>Register</h2>
                     </v-card-text>
-                    <v-form ref="form" v-model="valid" lazy-validation>
+                    <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="registerAccount">
                      <v-text-field
                         label="Username"
                         v-model="username"
@@ -40,8 +40,11 @@
                         variant="solo-filled"
                         required
                       ></v-text-field>
-                      <v-btn class="login-btn" block @click="checkForm">회원가입</v-btn>
+                      <v-btn class="login-btn" block @click="registerAccount">회원가입</v-btn>
                     </v-form>
+                    <div class="ma-3" style="color: red">
+                      {{ registerError }}
+                    </div>
                     <v-row class="mt-3">
                         <v-col class="text-left">
                           <span @click="goToLogin" style="cursor: pointer;" class="text-span">로그인페이지로 이동</span>
@@ -98,15 +101,22 @@ export default {
     username: '',
     email: '',
     password: '',
+    registerError: ''
   }),
   created() {
     store.commit('clearToken');
   },
 
   methods: {
-    checkForm() {
+    async registerAccount() {
       if (this.valid) {
-        register(this.username, this.email, this.password)
+        const isRegistered = await register(this.username, this.email, this.password)
+        if (isRegistered) {
+          router.push({ name: 'otp', params: { usage: 'login' } });
+        }
+        else {
+          this.registerError = '존재하는 이메일입니다.';
+        }
       }
     },
     goToLogin() {

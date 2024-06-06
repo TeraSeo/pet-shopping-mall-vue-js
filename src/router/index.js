@@ -6,6 +6,7 @@ import OtpView from '../views/auth/OtpView.vue'
 import Redirect from '../views/oauth/RedirectView.vue'
 import LogoutView from '../views/auth/LogoutView.vue'
 import FindPasswordView from '../views/auth/FindPasswordView.vue'
+import ResetPasswordView from '../views/auth/ResetPasswordView.vue'
 import AdminView from '../views/admin/adminView.vue'
 
 const routes = [
@@ -31,12 +32,17 @@ const routes = [
     component: RegisterView
   },
   {
-    path: '/otp',
+    name: 'otp',
+    path: '/otp/:usage',
     component: OtpView
   },
   {
     path: '/find/password',
     component: FindPasswordView
+  },
+  {
+    path: '/reset/password',
+    component: ResetPasswordView
   },
   {
     path: '/oauth2/redirect', 

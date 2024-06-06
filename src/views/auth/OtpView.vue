@@ -66,22 +66,26 @@ import { sendOtp, checkOtp } from '../../auth.js';
 
 export default {
   created() {
-    this.email = store.state.email;
-    if (this.email == null) {
-        router.push('/login')
-    }
-    else {
-        sendOtp(this.email);
+    this.usage = this.$route.params.usage || null;
+    if (this.usage != null) {
+      this.email = store.state.email;
+      if (this.email == null) {
+          router.push('/login')
+      }
+      else {
+          sendOtp(this.email);
+      }
     }
   },
   data: () => ({
     email: '',
+    usage: '',
     otp: ''
   }),
   methods: {
     async verify() {
         console.log(this.otp)
-        checkOtp(this.email, this.otp)
+        checkOtp(this.email, this.otp, this.usage)
     },
     async resendOtp() {
         sendOtp(this.email)
