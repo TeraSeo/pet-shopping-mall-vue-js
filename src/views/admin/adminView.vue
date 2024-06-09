@@ -1,20 +1,10 @@
 <template>
   <v-app class="main">
-    <v-row class="upper">
-      <div class="admin-label ml-3">
-        Admin
-      </div>
-      <v-spacer></v-spacer>
-      <div>Theo Rodriguez</div>
-      <v-avatar class="ml-3 mr-9">
-        <v-img
-          alt="Theo"
-          src="https://cdn.vuetifyjs.com/images/john.jpg"
-        ></v-img>
-      </v-avatar>
-    </v-row>
     <v-row>
       <v-col id="sidebar" sm=2>
+        <div class="admin-label ml-10 mt-7 mb-7">
+          <h3>Zero Pet</h3>
+        </div>
         <v-list>
           <v-list-item v-for="item in menuItems" :key="item.title" @click="selectMenuItem(item)" :style="{ background: selectedMenuItem === item ? '#5E49C3' : '' }">
             <v-col>
@@ -39,12 +29,44 @@
         </v-list>
       </v-col>
       <v-col id="main-content" sm="10">
-        <keep-alive>
-          <component :is="currentComponent"></component>
-        </keep-alive>
+        <v-row class="upper py-2 pr-8">
+          <v-col sm="5" class="search-box">
+            <v-text-field
+              class="search"
+              prepend-inner-icon="mdi-magnify"
+              variant="solo"
+              hide-details
+              flat
+              single-line
+              bg-color="grey-lighten-3"
+              rounded="xl"
+              density="compact"
+              :loading="loading"
+              @click:append-inner="onClick"
+            ></v-text-field>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-icon class="mr-3">mdi-bell-outline</v-icon>
+          <v-avatar class="ml-3 mr-3">
+            <v-img
+              alt="Theo"
+              src="https://cdn.vuetifyjs.com/images/john.jpg"
+            ></v-img>
+          </v-avatar>
+          <div class="user-info">
+            <div class="mr-3">Teajun Seo</div>
+            <div class="user-role">admin</div>
+          </div>
+        </v-row>
+        <v-row>
+          <v-col>
+            <keep-alive>
+              <component :is="currentComponent"></component>
+            </keep-alive>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
-    <AppFooter />
   </v-app>
 </template>
 
@@ -57,7 +79,7 @@ import Statistics from '@/views/admin/page/StatisticsView.vue';
 import Finance from '@/views/admin/page/FinanceView.vue';
 import Support from '@/views/admin/page/SupportView.vue';
 import FAQ from '@/views/admin/page/FAQView.vue';
-// import Logout from '@/views/Logout.vue';
+
 export default {
   components: {
     AppFooter,
@@ -87,7 +109,7 @@ export default {
   methods: {
     selectMenuItem(item) {
       this.selectedMenuItem = item;
-      this.currentComponent = item.component
+      this.currentComponent = item.component;
     },
   },
   mounted() {
@@ -101,11 +123,13 @@ export default {
   min-height: 100vh;
 }
 
+.container {
+  margin: 0;
+}
+
 .upper {
   align-items: center;
   background-color: #fff;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  z-index: 1;
 }
 
 .admin-label {
@@ -116,6 +140,27 @@ export default {
 #main-content {
   background: #ECF0F2;
   min-height: 100vh;
+}
+
+.search {
+  margin-top: 7px;
+  margin-left: 20px;
+}
+
+#sidebar {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-role {
+  font-size: 12px;
+  color: grey;
 }
 
 </style>
