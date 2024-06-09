@@ -36,7 +36,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   #footer {
     background: #f5f5f5;
   }
