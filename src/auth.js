@@ -110,9 +110,7 @@ async function checkIsLoggedIn() {
         store.commit('setAccessToken', responseToken);
       }
     }
-
-    const res = await axios.get('http://localhost:9090/api/oauth/get/authority', {headers: { refreshToken: refreshToken }});
-    console.log("authorities: " + res.data)
+    
     return true;
 
   } catch (error) {
