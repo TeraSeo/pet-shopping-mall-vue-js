@@ -94,7 +94,7 @@
 <script>
 import router from '@/router';
 import store from '@/store';
-import { login } from '../../auth.js';
+import { login, checkIsVerified } from '../../auth.js';
 
 export default {
   created() {
@@ -113,7 +113,14 @@ export default {
       if (this.valid) {
         const res = await login(this.email, this.password)
         if (res) {
-          router.push({ name: 'otp', params: { usage: 'login' } });
+          const isVerified = await checkIsVerified(this.email);
+          if (isVerified) {
+            store.commit('setVerifiedStatus', true);
+            router.push("/")
+          }
+          else {
+            router.push({ name: 'otp', params: { usage: 'login' } });
+          }
         } else {
           this.loginError = '로그인에 실패했습니다. 다시 시도해주세요.';
         }
