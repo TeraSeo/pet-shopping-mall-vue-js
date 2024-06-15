@@ -4,17 +4,17 @@
     <v-app class="main mt-3">
       <v-card>
         <v-toolbar flat>
-          <v-btn color="primary" dark class="mb-2" @click="openNewRoleDialog">
+          <v-btn color="primary" dark class="mb-2" @click="openNewUserDialog">
             New User
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn icon @click="reloadPage">
             <v-icon>mdi-reload</v-icon>
           </v-btn>
-          <v-btn icon :disabled="!isSingleChecked">
+          <v-btn icon :disabled="!isSingleChecked" @click="openEditPage">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn icon :disabled="!isAnyChecked">
+          <v-btn icon :disabled="!isAnyChecked" @click="deleteUser">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </v-toolbar>
@@ -27,6 +27,7 @@
               <td>
                 <v-checkbox v-model="item.checked" hide-details></v-checkbox>
               </td>
+              <td>{{ item.id }}</td>
               <td>{{ item.name }}</td>
               <td>{{ item.email }}</td>
               <td>{{ item.role }}</td>
@@ -37,17 +38,17 @@
       </v-card>
       
       <!-- New Role Dialog -->
-      <v-dialog v-model="dialog" max-width="500px">
+      <v-dialog v-model="createUserDialog" max-width="500px">
         <v-card>
           <v-card-title>
             <span class="headline">New Role</span>
           </v-card-title>
           <v-card-text>
-            <v-form ref="form" v-model="createUser.valid" lazy-validation>
+            <v-form ref="form" v-model="createUserData.valid" lazy-validation>
               <v-text-field
                 label="Username"
-                v-model="createUser.username"
-                :rules="createUser.usernameRules"
+                v-model="createUserData.username"
+                :rules="createUserData.usernameRules"
                 prepend-inner-icon="mdi-account"
                 type="text"
                 class="mt-2 custom-text-field"
@@ -56,16 +57,16 @@
               ></v-text-field>
               <v-text-field
                 label="Email"
-                v-model="createUser.email"
-                :rules="createUser.emailRules"
+                v-model="createUserData.email"
+                :rules="createUserData.emailRules"
                 prepend-inner-icon="mdi-email"
                 variant="solo-filled"
                 required
               ></v-text-field>
               <v-text-field
                 label="Password"
-                v-model="createUser.password"
-                :rules="createUser.passwordRules"
+                v-model="createUserData.password"
+                :rules="createUserData.passwordRules"
                 prepend-inner-icon="mdi-lock"
                 type="password"
                 class="mt-2 custom-text-field"
@@ -75,15 +76,58 @@
               <v-select
                 label="Role"
                 :items="['USER', 'SELLER', 'STAFF', 'ADMIN']"
-                v-model="createUser.role"
+                v-model="createUserData.role"
+                :rules="createUserData.roleRules"
                 variant="solo"
               ></v-select>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeDialog">Cancel</v-btn>
-            <v-btn color="blue darken-1" text @click="saveRole">Save</v-btn>
+            <v-btn color="blue darken-1" text @click="closeNewUserDialog">Cancel</v-btn>
+            <v-btn color="blue darken-1" text @click="saveUser">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- Edit User Dialog -->
+      <v-dialog v-model="editUserDialog" max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="headline">Edit User</span>
+          </v-card-title>
+          <v-card-text>
+            <v-form ref="form" v-model="editUserData.valid" lazy-validation>
+              <v-text-field
+                label="Username"
+                v-model="editUserData.username"
+                :rules="editUserData.usernameRules"
+                prepend-inner-icon="mdi-account"
+                type="text"
+                class="mt-2 custom-text-field"
+                variant="solo-filled"
+                required
+              ></v-text-field>
+              <v-text-field
+                label="Email"
+                v-model="editUserData.email"
+                :rules="editUserData.emailRules"
+                prepend-inner-icon="mdi-email"
+                variant="solo-filled"
+                required
+              ></v-text-field>
+              <v-select
+                label="Role"
+                :items="['USER', 'SELLER', 'STAFF', 'ADMIN']"
+                v-model="editUserData.role"
+                variant="solo"
+              ></v-select>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="closeEditUserDialog">Cancel</v-btn>
+            <v-btn color="blue darken-1" text @click="editUser">Edit</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -97,7 +141,7 @@
 </template>
 
 <script>
-import { getUsers, createUser } from '@/service/admin.js';
+import { getUsers, createUser, editUser, delUsers } from '@/service/admin.js';
 
 export default {
   created() {
@@ -106,7 +150,8 @@ export default {
   data() {
     return {
       users: [],
-      createUser: {
+
+      createUserData: {
         valid: false,
         username: '',
         email: '',
@@ -115,8 +160,21 @@ export default {
         usernameRules: [v => v.length >= 2 || '길이가 너무 짧습니다'],
         emailRules: [v => /.+@.+/.test(v) || '이메일이 올바르지않습니다'],
         passwordRules: [v => v.length >= 6 || '길이가 너무 짧습니다'],
+        roleRules: [v => v.length > 0 || '역할을 선택해주세요'],
       },
-      dialog: false,
+
+      editUserData: {
+        valid: false,
+        username: '',
+        email: '',
+        role: '',
+        usernameRules: [v => v.length >= 2 || '길이가 너무 짧습니다'],
+        emailRules: [v => /.+@.+/.test(v) || '이메일이 올바르지않습니다'],
+        roleRules: [v => v.length > 0 || '역할을 선택해주세요'],
+      },
+
+      createUserDialog: false,
+      editUserDialog: false,
       snackbar: {
         show: false,
         message: '',
@@ -133,30 +191,69 @@ export default {
     }
   },
   methods: {
+    openNewUserDialog() {
+      this.createUserDialog = true;
+    },
+    closeNewUserDialog() {
+      this.createUserDialog = false;
+    },
+
+    openEditUserDialog() {
+      this.editUserDialog = true;
+    },
+    closeEditUserDialog() {
+      this.editUserDialog = false;
+    },
+
     async fetchUsers() {
       this.users = await getUsers();
     },
-    openNewRoleDialog() {
-      this.dialog = true;
-    },
-    closeDialog() {
-      this.dialog = false;
-    },
-    saveRole() {
-      if (this.createUser.valid) {
-        const isCreated = createUser(this.createUser.username, this.createUser.email, this.createUser.password, this.createUser.role);
+
+    async saveUser() {
+      if (this.createUserData.valid) {
+        const isCreated = await createUser(this.createUserData.username, this.createUserData.email, this.createUserData.password, this.createUserData.role);
         if (isCreated) {
-          this.snackbar.message = 'User created successfully';
-          this.snackbar.color = 'success';
-          this.closeDialog();
+          this.createSnackbar('유저 생성에 성공했습니다', true)
+          this.closeNewUserDialog();
         }
         else {
-          this.snackbar.message = '유저 생성에 실패했습니다';
-          this.snackbar.color = 'error';
+          this.createSnackbar('유저 생성에 실패했습니다', false)
         }
-
       }
     },
+
+    async openEditPage() {
+      this.editUserData.username = this.users.filter(user => user.checked)[0]['name'];
+      this.editUserData.email = this.users.filter(user => user.checked)[0]['email'];
+      this.editUserData.role = this.users.filter(user => user.checked)[0]['role'];
+      this.openEditUserDialog();
+    },
+    async editUser() {
+      const isEdited = await editUser(this.users.filter(user => user.checked)[0]['id'], this.editUserData.username, this.editUserData.email, this.editUserData.role);
+      if (isEdited) {
+        this.createSnackbar('유저 수정에 성공했습니다', true)
+        this.closeEditUserDialog();
+      }
+      else {
+        this.createSnackbar('유저 수정에 실패했습니다', false)
+      }
+    },
+
+    deleteUser() {
+      delUsers(this.users.filter(user => user.checked))
+    },
+
+    createSnackbar(msg, isSucceeded) {
+      this.snackbar.message = msg;
+      if (isSucceeded) {
+        this.snackbar.color = 'success';
+      }
+      else {
+        this.snackbar.color = 'error';
+      }
+      this.snackbar.show = true;
+    },
+
     reloadPage() {
       this.fetchUsers();
     }
