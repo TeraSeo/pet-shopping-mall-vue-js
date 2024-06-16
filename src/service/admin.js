@@ -14,7 +14,7 @@ async function getUsers() {
             name: userData.name,
             email: userData.email,
             role: userData.role,
-            verified: userData.isVerified,
+            isVerified: userData.isVerified,
         }));
         return users;
     } catch(error) {
@@ -24,7 +24,6 @@ async function getUsers() {
 
 async function createUser(username, email, password, role) {
     try {
-        console.log(role);
         const response = await axios.post('http://localhost:9090/api/users/admin/create-user', 
         {name : username, email: email, password: password, role: role},
         {headers: { Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken }});
@@ -36,7 +35,6 @@ async function createUser(username, email, password, role) {
 
 async function editUser(id, name, email, role) {
     try {
-        console.log(id + " " + name + " " + email + " " + role);
         const response = await axios.put('http://localhost:9090/api/users/admin/edit-user', 
         {id: id, name : name, email: email, role: role},
         {headers: { Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken }});
@@ -48,8 +46,12 @@ async function editUser(id, name, email, role) {
 
 async function delUsers(userDtos) {
     try {
-        console.log(userDtos);
-        
+        const ids = userDtos.map(userDto => userDto.id);
+        const response = await axios.delete('http://localhost:9090/api/users/admin/delete-users', 
+        {   
+            headers: { userIds: ids, Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 
+        });
+        return response.data;
     } catch(error) {
         return false;
     }

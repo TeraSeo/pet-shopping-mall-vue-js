@@ -1,11 +1,11 @@
 class UserDTO {
-    constructor({ id, checked = false, name, email, role, verified }) {
+    constructor({ id, checked = false, name, email, role, isVerified }) {
       this.id = id;
       this.checked = checked;
       this.name = name;
       this.email = email;
       this.role = role;
-      this.isVerified = verified;
+      this.isVerified = isVerified;
     }
   }
   

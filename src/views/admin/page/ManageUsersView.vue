@@ -231,6 +231,7 @@ export default {
     async editUser() {
       const isEdited = await editUser(this.users.filter(user => user.checked)[0]['id'], this.editUserData.username, this.editUserData.email, this.editUserData.role);
       if (isEdited) {
+        await this.fetchUsers();
         this.createSnackbar('유저 수정에 성공했습니다', true)
         this.closeEditUserDialog();
       }
@@ -239,8 +240,15 @@ export default {
       }
     },
 
-    deleteUser() {
-      delUsers(this.users.filter(user => user.checked))
+    async deleteUser() {
+      const isDeleted = await delUsers(this.users.filter(user => user.checked))
+      if (isDeleted) {
+        await this.fetchUsers();
+        this.createSnackbar('유저 삭제에 성공했습니다', true)
+      }
+      else {
+        this.createSnackbar('유저 삭제에 실패했습니다', false)
+      }
     },
 
     createSnackbar(msg, isSucceeded) {
