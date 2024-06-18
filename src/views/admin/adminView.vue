@@ -77,8 +77,8 @@ import Orders from '@/views/admin/page/OrdersView.vue';
 import ManageUsers from '@/views/admin/page/ManageUsersView.vue';
 import Statistics from '@/views/admin/page/StatisticsView.vue';
 import Finance from '@/views/admin/page/FinanceView.vue';
-import Support from '@/views/admin/page/SupportView.vue';
 import FAQ from '@/views/admin/page/FAQView.vue';
+import ProductsViewVue from './page/ProductsView.vue';
 
 export default {
   components: {
@@ -86,9 +86,9 @@ export default {
     Dashboard,
     Orders,
     ManageUsers,
+    ProductsViewVue,
     Statistics,
     Finance,
-    Support,
     FAQ
   },
   data() {
@@ -96,13 +96,13 @@ export default {
       currentComponent: 'Dashboard',
       selectedMenuItem: null,
       menuItems: [
-        { title: 'Dashboard', icon: 'mdi-view-dashboard', component: Dashboard },
-        { title: 'Orders', icon: 'mdi-cart-outline', component: Orders },
-        { title: 'Manage Users', icon: 'mdi-account-multiple', component: ManageUsers },
-        { title: 'Statistics', icon: 'mdi-chart-line', component: Statistics },
-        { title: 'Finance', icon: 'mdi-currency-usd', component: Finance },
-        { title: 'Support', icon: 'mdi-lifebuoy', component: Support },
-        { title: 'FAQ', icon: 'mdi-help-circle-outline', component: FAQ },
+        { title: '대쉬보드', icon: 'mdi-view-dashboard', component: Dashboard },
+        { title: '주문', icon: 'mdi-cart-outline', component: Orders },
+        { title: '사용자 관리', icon: 'mdi-account-multiple', component: ManageUsers },
+        { title: '상품', icon: 'mdi-package-variant-closed', component: ProductsViewVue },
+        { title: '통계', icon: 'mdi-chart-line', component: Statistics },
+        { title: '매출', icon: 'mdi-currency-usd', component: Finance },
+        { title: '문의', icon: 'mdi-help-circle-outline', component: FAQ },
       ],
     }
   },

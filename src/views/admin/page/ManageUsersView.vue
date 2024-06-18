@@ -1,11 +1,11 @@
 <template>
   <v-col>
-    <h2>Manage Users</h2>
+    <h2>사용자 관리</h2>
     <v-app class="main mt-3">
       <v-card>
         <v-toolbar flat>
           <v-btn color="primary" dark class="mb-2" @click="openNewUserDialog">
-            New User
+            사용자 생성
           </v-btn>
           <v-spacer></v-spacer>
           <v-btn icon @click="reloadPage">
@@ -41,7 +41,7 @@
       <v-dialog v-model="createUserDialog" max-width="500px">
         <v-card>
           <v-card-title>
-            <span class="headline">New Role</span>
+            <span class="headline">사용자 생성</span>
           </v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="createUserData.valid" lazy-validation>
@@ -74,7 +74,7 @@
                 required
               ></v-text-field>
               <v-select
-                label="Role"
+                label="권한"
                 :items="['USER', 'SELLER', 'STAFF', 'ADMIN']"
                 v-model="createUserData.role"
                 :rules="createUserData.roleRules"
@@ -84,8 +84,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeNewUserDialog">Cancel</v-btn>
-            <v-btn color="blue darken-1" text @click="saveUser">Save</v-btn>
+            <v-btn color="blue darken-1" text @click="closeNewUserDialog">취소</v-btn>
+            <v-btn color="blue darken-1" text @click="saveUser">저장</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -94,7 +94,7 @@
       <v-dialog v-model="editUserDialog" max-width="500px">
         <v-card>
           <v-card-title>
-            <span class="headline">Edit User</span>
+            <span class="headline">사용자 수정</span>
           </v-card-title>
           <v-card-text>
             <v-form ref="form" v-model="editUserData.valid" lazy-validation>
@@ -126,15 +126,15 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="closeEditUserDialog">Cancel</v-btn>
-            <v-btn color="blue darken-1" text @click="editUser">Edit</v-btn>
+            <v-btn color="blue darken-1" text @click="closeEditUserDialog">취소</v-btn>
+            <v-btn color="blue darken-1" text @click="editUser">수정</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
 
       <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="3000">
         {{ snackbar.message }}
-        <v-btn color="white" text @click="snackbar.show = false">Close</v-btn>
+        <v-btn color="white" text @click="snackbar.show = false">닫기</v-btn>
       </v-snackbar>
     </v-app>
   </v-col>

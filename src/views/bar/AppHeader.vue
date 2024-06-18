@@ -29,40 +29,21 @@
       <v-toolbar-items class="menu">
         <v-col align="center">
           <v-spacer></v-spacer>
-
-          <v-btn class="cat-menu menu-item" @mouseover="showMenu('cat')">
-            <v-col>
-              <h3>고양이</h3>
-              <div class="underline" v-if="currentMenu === 'cat'"></div>
-            </v-col>
-          </v-btn>
-
-          <v-btn class="dog-menu menu-item" @mouseover="showMenu('dog')">
-            <v-col>
-              <h3>강아지</h3>
-              <div class="underline" v-if="currentMenu === 'dog'"></div>
-            </v-col>
-          </v-btn>
-
-          <v-btn class="menu-item" @mouseover="showMenu('walk')">
-            <v-col>
-              <h3>산책용품</h3>
-              <div class="underline" v-if="currentMenu === 'walk'"></div>
-            </v-col>
-          </v-btn>
-
-          <v-btn class="menu-item" @mouseover="showMenu('food')">
-            <v-col>
-              <h3>사료/간식/케어</h3>
-              <div class="underline" v-if="currentMenu === 'food'"></div>
-            </v-col>
-          </v-btn>
-
+          <v-btn class="menu-item" @mouseover="showMenu('snack')"> <v-col><h3>간식</h3><div class="underline" v-if="currentMenu === 'snack'"></div></v-col> </v-btn>
+          <v-btn class="menu-item" @mouseover="showMenu('food')"> <v-col><h3>사료</h3><div class="underline" v-if="currentMenu === 'food'"></div></v-col> </v-btn>
+          <v-btn class="menu-item" @mouseover="showMenu('grooming')"> <v-col><h3>미용용품</h3><div class="underline" v-if="currentMenu === 'grooming'"></div></v-col> </v-btn>
+          <v-btn class="menu-item" @mouseover="showMenu('fashion')"> <v-col><h3>패션용품</h3><div class="underline" v-if="currentMenu === 'fashion'"></div></v-col> </v-btn>
+          <v-btn class="menu-item" @mouseover="showMenu('hygiene')"> <v-col><h3>위생용품</h3><div class="underline" v-if="currentMenu === 'hygiene'"></div></v-col> </v-btn>
+          <v-btn class="menu-item" @mouseover="showMenu('diningWater')"> <v-col><h3>식기/급수기</h3><div class="underline" v-if="currentMenu === 'diningWater'"></div></v-col> </v-btn>
+          <v-btn class="menu-item" @mouseover="showMenu('outing')"> <v-col><h3>외출용품</h3><div class="underline" v-if="currentMenu === 'outing'"></div></v-col> </v-btn>
+          <v-btn class="menu-item" @mouseover="showMenu('toys')"> <v-col><h3>장난감</h3><div class="underline" v-if="currentMenu === 'toys'"></div></v-col> </v-btn>
+          <v-btn class="menu-item" @mouseover="showMenu('houseSafety')"> <v-col><h3>하우스/안전용품</h3><div class="underline" v-if="currentMenu === 'houseSafety'"></div></v-col> </v-btn>
+          <v-spacer></v-spacer>
           <v-container class="menu-content" v-if="currentMenu" @mouseleave="debouncedHideMenu">
             <v-row>
-              <v-col v-for="(item, index) in currentItems" :key="index" cols="4">
+              <v-col v-for="(subItem, index) in currentItems" :key="index" cols="4">
                 <v-list class="menu-list">
-                  <v-list-item v-for="(subItem, subIndex) in item" :key="subIndex" :href="subItem.link">
+                  <v-list-item :href="subItem.link">
                     <v-list-item-title>
                       <v-icon>{{ subItem.icon }}</v-icon> {{ subItem.title }}
                     </v-list-item-title>
@@ -88,54 +69,109 @@ export default {
   data() {
     return {
       isLoggedIn: false,
-      currentMenu: null, // check in which menu the mouse is on hover
+      currentMenu: null, // Check in which menu the mouse is on hover
       loading: false,
 
-      catItems: [
-        [{ title: 'Cat Food', icon: 'mdi-food', link: 'https://example.com/cat-food' },
-         { title: 'Cat Toys', icon: 'mdi-toy-brick', link: 'https://example.com/cat-toys' },
-         { title: 'Cat Accessories', icon: 'mdi-collar', link: 'https://example.com/cat-accessories' }],
-        [{ title: 'Cat Litter', icon: 'mdi-litter-box', link: 'https://example.com/cat-litter' },
-         { title: 'Cat Trees', icon: 'mdi-tree', link: 'https://example.com/cat-trees' },
-         { title: 'Cat Health', icon: 'mdi-health', link: 'https://example.com/cat-health' }]
-      ],
-      dogItems: [
-        [{ title: 'Dog Food', icon: 'mdi-food', link: 'https://example.com/dog-food' },
-         { title: 'Dog Toys', icon: 'mdi-toy-brick', link: 'https://example.com/dog-toys' },
-         { title: 'Dog Accessories', icon: 'mdi-collar', link: 'https://example.com/dog-accessories' }],
-        [{ title: 'Dog Beds', icon: 'mdi-bed', link: 'https://example.com/dog-beds' },
-         { title: 'Dog Health', icon: 'mdi-health', link: 'https://example.com/dog-health' },
-         { title: 'Dog Training', icon: 'mdi-school', link: 'https://example.com/dog-training' }],
-      ],
-      walkItems: [
-        [{ title: 'Leashes', icon: 'mdi-leash', link: 'https://example.com/leashes' },
-         { title: 'Collars', icon: 'mdi-collar', link: 'https://example.com/collars' },
-         { title: 'Harnesses', icon: 'mdi-harness', link: 'https://example.com/harnesses' }],
-        [{ title: 'Travel Gear', icon: 'mdi-suitcase', link: 'https://example.com/travel-gear' },
-         { title: 'Outdoor Gear', icon: 'mdi-tent', link: 'https://example.com/outdoor-gear' },
-         { title: 'Safety Gear', icon: 'mdi-shield', link: 'https://example.com/safety-gear' }]
+      snackItems: [
+        { title: '강아지껌', icon: 'mdi-bone', link: 'https://example.com/snack/dog-chews' },
+        { title: '비스켓/스낵', icon: 'mdi-cookie', link: 'https://example.com/snack/biscuits-snacks' },
+        { title: '수제간식', icon: 'mdi-chef-hat', link: 'https://example.com/snack/homemade-snacks' },
+        { title: '육포/사사미', icon: 'mdi-meat', link: 'https://example.com/snack/jerky' },
+        { title: '캔/파우치', icon: 'mdi-can-food', link: 'https://example.com/snack/canned-foods' },
+        { title: '기타간식', icon: 'mdi-basket-fill', link: 'https://example.com/snack/other-snacks' },
+        { title: '고양이간식', icon: 'mdi-cat', link: 'https://example.com/snack/cat-treats' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/snack/etc' },
       ],
       foodItems: [
-        [{ title: 'Cat Food', icon: 'mdi-food', link: 'https://example.com/cat-food' },
-         { title: 'Dog Food', icon: 'mdi-food', link: 'https://example.com/dog-food' },
-         { title: 'Snacks', icon: 'mdi-candy', link: 'https://example.com/snacks' }],
-        [{ title: 'Supplements', icon: 'mdi-pill', link: 'https://example.com/supplements' },
-         { title: 'Dental Care', icon: 'mdi-tooth', link: 'https://example.com/dental-care' },
-         { title: 'Health Care', icon: 'mdi-heart-pulse', link: 'https://example.com/health-care' }]
+        { title: '건식사료', icon: 'mdi-cereal', link: 'https://example.com/food/dry-food' },
+        { title: '습식사료', icon: 'mdi-food-steak', link: 'https://example.com/food/wet-food' },
+        { title: '우유/분유', icon: 'mdi-bottle-soda', link: 'https://example.com/food/milk' },
+        { title: '강아지영양제', icon: 'mdi-paw', link: 'https://example.com/food/dog-supplements' },
+        { title: '고양이사료', icon: 'mdi-cat', link: 'https://example.com/food/cat-food' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/food/etc' },
+      ],
+      groomingItems: [
+        { title: '드라이기', icon: 'mdi-hair-dryer', link: 'https://example.com/grooming/dryers' },
+        { title: '발톱관리용품', icon: 'mdi-paw-off', link: 'https://example.com/grooming/nail-care' },
+        { title: '브러시', icon: 'mdi-brush', link: 'https://example.com/grooming/brushes' },
+        { title: '샤워기/타월', icon: 'mdi-shower-head', link: 'https://example.com/grooming/shower-tools' },
+        { title: '샴푸/린스', icon: 'mdi-shampoo', link: 'https://example.com/grooming/shampoos' },
+        { title: '이발기/가위', icon: 'mdi-scissors-cutting', link: 'https://example.com/grooming/clippers-scissors' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/grooming/etc' },
+      ],
+      fashionItems: [
+        { title: '레인코트', icon: 'mdi-umbrella', link: 'https://example.com/fashion/raincoats' },
+        { title: '신발/양말', icon: 'mdi-shoe-formal', link: 'https://example.com/fashion/shoes-socks' },
+        { title: '외투', icon: 'mdi-coat-rack', link: 'https://example.com/fashion/coats' },
+        { title: '원피스/올인원', icon: 'mdi-tshirt-crew-outline', link: 'https://example.com/fashion/dresses' },
+        { title: '코스튬', icon: 'mdi-theater', link: 'https://example.com/fashion/costumes' },
+        { title: '셔츠/상의', icon: 'mdi-tshirt-crew', link: 'https://example.com/fashion/shirts' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/fashion/etc' },
+      ],
+      hygieneItems: [
+        { title: '구강위생용품', icon: 'mdi-toothbrush', link: 'https://example.com/hygiene/oral-care' },
+        { title: '기저귀', icon: 'mdi-baby', link: 'https://example.com/hygiene/diapers' },
+        { title: '배변봉투', icon: 'mdi-trash-can', link: 'https://example.com/hygiene/poop-bags' },
+        { title: '배변판', icon: 'mdi-grid', link: 'https://example.com/hygiene/litter-box' },
+        { title: '배변패드', icon: 'mdi-napkin', link: 'https://example.com/hygiene/potty-pads' },
+        { title: '탈취/소독제', icon: 'mdi-bottle-sanitizer', link: 'https://example.com/hygiene/deodorizers-disinfectants' },
+        { title: '눈/귀 위생용품', icon: 'mdi-eye-outline', link: 'https://example.com/hygiene/eye-ear-care' },
+        { title: '넥카라', icon: 'mdi-collar', link: 'https://example.com/hygiene/neck-collars' },
+        { title: '해충방지용품', icon: 'mdi-bug', link: 'https://example.com/hygiene/pest-control' },
+        { title: '고양이화장실', icon: 'mdi-litter-box', link: 'https://example.com/hygiene/cat-litter-box' },
+        { title: '고양이모래', icon: 'mdi-beach', link: 'https://example.com/hygiene/cat-litter' },
+        { title: '고양이모래매트', icon: 'mdi-rug', link: 'https://example.com/hygiene/cat-litter-mat' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/hygiene/etc' },
+      ],
+      diningWaterItems: [
+        { title: '급수기', icon: 'mdi-water-pump', link: 'https://example.com/diningWaterItems/water-dispensers' },
+        { title: '급식기', icon: 'mdi-food-bowl', link: 'https://example.com/diningWaterItems/feeding-bowls' },
+        { title: '정수기', icon: 'mdi-water', link: 'https://example.com/diningWaterItems/water-filters' },
+        { title: '사료보관통', icon: 'mdi-barrel', link: 'https://example.com/diningWaterItems/food-storage' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/diningWaterItems/etc' },
+      ],
+      outingItems: [
+        { title: '가슴줄', icon: 'mdi-leash', link: 'https://example.com/leashes/humid' }, // Assuming 가습줄 means a special type of leash
+        { title: '리드줄', icon: 'mdi-leash', link: 'https://example.com/leashes/lead' },
+        { title: '목걸이/인식표', icon: 'mdi-tag-heart', link: 'https://example.com/collars/tags' },
+        { title: '목줄', icon: 'mdi-leash', link: 'https://example.com/leashes' },
+        { title: '유모차', icon: 'mdi-baby-carriage', link: 'https://example.com/strollers' },
+        { title: '이동가방/이동장', icon: 'mdi-bag-carry-on', link: 'https://example.com/carriers' },
+        { title: '차량용캐리어/시트', icon: 'mdi-car-seat', link: 'https://example.com/car-seats' },
+        { title: '입마개', icon: 'mdi-muzzle', link: 'https://example.com/muzzles' },
+        { title: '기타', icon: 'mdi-dots-horizontal', link: 'https://example.com/outings/etc' },
+      ],
+      toysItem: [
+        { title: '공/원반', icon: 'mdi-soccer', link: 'https://example.com/toys/balls-discs' },
+        { title: '인형', icon: 'mdi-human-child', link: 'https://example.com/toys/dolls' },
+        { title: '터널/큐브', icon: 'mdi-tunnel-outline', link: 'https://example.com/toys/tunnels-cubes' },
+        { title: '캣타워', icon: 'mdi-tower-beach', link: 'https://example.com/toys/cat-towers' },
+        { title: '고양이스크래쳐', icon: 'mdi-scratcher', link: 'https://example.com/toys/cat-scratchers' },
+        { title: '고양이장난감', icon: 'mdi-cat', link: 'https://example.com/toys/cat-toys' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/toys/etc' },
+      ],
+      houseSafetyItems: [
+        { title: '울타리', icon: 'mdi-fence', link: 'https://example.com/house-safety/fences' },
+        { title: '매트', icon: 'mdi-rug', link: 'https://example.com/house-safety/mats' },
+        { title: '안전문', icon: 'mdi-gate', link: 'https://example.com/house-safety/gates' },
+        { title: '쿠션/방석', icon: 'mdi-seat', link: 'https://example.com/house-safety/cushions' },
+        { title: '하우스', icon: 'mdi-dog-side', link: 'https://example.com/house-safety/houses' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/house-safety/etc' },
       ],
     };
   },
+
   methods: {
     onClick() {
       // Your search action
     },
-    showMenu(menu) { // show menus on hover
+    showMenu(menu) {
       this.currentMenu = menu;
     },
     hideMenu() {
       this.currentMenu = null;
     },
-    debouncedHideMenu: _.debounce(function() { // hide menus when it's not on hover
+    debouncedHideMenu: _.debounce(function() {
       this.hideMenu();
     }, 200),
     async fetchLoginStatus() {
@@ -150,14 +186,24 @@ export default {
   computed: {
     currentItems() {
       switch (this.currentMenu) {
-        case 'cat':
-          return this.catItems;
-        case 'dog':
-          return this.dogItems;
-        case 'walk':
-          return this.walkItems;
+        case 'snack':
+          return this.snackItems;
         case 'food':
           return this.foodItems;
+        case 'grooming':
+          return this.groomingItems;
+        case 'fashion':
+          return this.fashionItems;
+        case 'hygiene':
+          return this.hygieneItems;
+        case 'diningWater':
+          return this.diningWaterItems;
+        case 'outing':
+          return this.outingItems;
+        case 'toys':
+          return this.toysItem;
+        case 'houseSafety':
+          return this.houseSafetyItems;
         default:
           return [];
       }
