@@ -3,7 +3,7 @@
     <v-row>
       <v-col id="sidebar" sm=2>
         <div class="admin-label ml-10 mt-7 mb-7">
-          <h3>Zero Pet</h3>
+          <h3>Zero Cat</h3>
         </div>
         <v-list>
           <v-list-item v-for="item in menuItems" :key="item.title" @click="selectMenuItem(item)" :style="{ background: selectedMenuItem === item ? '#5E49C3' : '' }">

@@ -141,7 +141,6 @@ async function checkIsAdmin() {
 async function checkIsVerified(email) {
   try {
     const response = await axios.get('http://localhost:9090/api/auth/check/isVerified', { params: {email: email} });
-    console.log(response);
     store.commit('setAccessToken', response.headers['accesstoken']);
     store.commit('setRefreshToken', response.headers['refreshtoken']);
     return response.data;
@@ -151,4 +150,10 @@ async function checkIsVerified(email) {
   }
 }
 
-export { login, register, sendOtp, checkOtp, checkEmailExistence, resetPassword, checkIsLoggedIn, checkIsAdmin, checkIsVerified }
+async function setUserIdByEmail(email) {
+  const response = await axios.get('http://localhost:9090/api/auth/get/userId', { params: {email: email} });
+  store.commit('setUserIdStatus', response.data);
+  console.log('id: ' + response.data);
+}
+
+export { login, register, sendOtp, checkOtp, checkEmailExistence, resetPassword, checkIsLoggedIn, checkIsAdmin, checkIsVerified, setUserIdByEmail }

@@ -10,9 +10,13 @@
         created() {
             const accessToken = this.$route.query.accessToken;
             const refreshToken = this.$route.query.refreshToken;
+            const email = this.$route.query.email;
+
             if (accessToken && refreshToken) {
                 store.commit('setAccessToken', accessToken);
                 store.commit('setRefreshToken', refreshToken);
+                store.commit('setVerifiedStatus', true);
+                store.commit('setEmail', email);
                 router.push({path: '/'})
             }
             else {

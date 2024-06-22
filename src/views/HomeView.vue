@@ -12,8 +12,15 @@
 <script>
 import AppHeader from '@/views/bar/AppHeader.vue';
 import AppFooter from '@/views/bar/AppFooter.vue';
+import store from '@/store';
+import { setUserIdByEmail } from '@/auth';
 
 export default {
+  created() {
+    if (store.state.userId == null) {
+      setUserIdByEmail(store.state.email)
+    }
+  },
   components: {
     AppHeader,
     AppFooter,

@@ -6,6 +6,7 @@ const store = new Vuex.Store({
         refreshToken: localStorage.getItem('refreshToken') || null,
         email: localStorage.getItem('email') || null,
         isVerified: localStorage.getItem('isVerified') || false,
+        userId: localStorage.getItem('userId') || null
     },
     mutations: {
         setAccessToken(state, token) {
@@ -24,15 +25,21 @@ const store = new Vuex.Store({
             state.isVerified = isVerified;
             localStorage.setItem('isVerified', isVerified);
         },
+        setUserIdStatus(state, userId) {
+            state.userId = userId;
+            localStorage.setItem('userId', userId);
+        },
         clearToken(state) {
             state.accessToken = null;
             state.refreshToken = null;
             state.email = null;
             state.isVerified = false;
+            state.userId = null;
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
             localStorage.removeItem('email');
             localStorage.removeItem('isVerified');
+            localStorage.removeItem('userId');
         }
     },
 });

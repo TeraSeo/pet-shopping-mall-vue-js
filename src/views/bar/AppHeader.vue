@@ -16,7 +16,7 @@
           ></v-text-field>
         </v-card-text>
         <v-spacer id="space"></v-spacer>
-        <h2 class="title">ZERO PET</h2>
+        <h2 class="title">제로캣</h2>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-xs-only">
           <v-btn text v-for="item in menuItems" :key="item.title" :to="item.path">
@@ -73,27 +73,20 @@ export default {
       loading: false,
 
       snackItems: [
-        { title: '강아지껌', icon: 'mdi-bone', link: 'https://example.com/snack/dog-chews' },
         { title: '비스켓/스낵', icon: 'mdi-cookie', link: 'https://example.com/snack/biscuits-snacks' },
         { title: '수제간식', icon: 'mdi-chef-hat', link: 'https://example.com/snack/homemade-snacks' },
-        { title: '육포/사사미', icon: 'mdi-meat', link: 'https://example.com/snack/jerky' },
         { title: '캔/파우치', icon: 'mdi-can-food', link: 'https://example.com/snack/canned-foods' },
-        { title: '기타간식', icon: 'mdi-basket-fill', link: 'https://example.com/snack/other-snacks' },
-        { title: '고양이간식', icon: 'mdi-cat', link: 'https://example.com/snack/cat-treats' },
         { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/snack/etc' },
       ],
       foodItems: [
         { title: '건식사료', icon: 'mdi-cereal', link: 'https://example.com/food/dry-food' },
         { title: '습식사료', icon: 'mdi-food-steak', link: 'https://example.com/food/wet-food' },
         { title: '우유/분유', icon: 'mdi-bottle-soda', link: 'https://example.com/food/milk' },
-        { title: '강아지영양제', icon: 'mdi-paw', link: 'https://example.com/food/dog-supplements' },
-        { title: '고양이사료', icon: 'mdi-cat', link: 'https://example.com/food/cat-food' },
         { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/food/etc' },
       ],
       groomingItems: [
         { title: '드라이기', icon: 'mdi-hair-dryer', link: 'https://example.com/grooming/dryers' },
         { title: '발톱관리용품', icon: 'mdi-paw-off', link: 'https://example.com/grooming/nail-care' },
-        { title: '브러시', icon: 'mdi-brush', link: 'https://example.com/grooming/brushes' },
         { title: '샤워기/타월', icon: 'mdi-shower-head', link: 'https://example.com/grooming/shower-tools' },
         { title: '샴푸/린스', icon: 'mdi-shampoo', link: 'https://example.com/grooming/shampoos' },
         { title: '이발기/가위', icon: 'mdi-scissors-cutting', link: 'https://example.com/grooming/clippers-scissors' },
@@ -110,10 +103,6 @@ export default {
       ],
       hygieneItems: [
         { title: '구강위생용품', icon: 'mdi-toothbrush', link: 'https://example.com/hygiene/oral-care' },
-        { title: '기저귀', icon: 'mdi-baby', link: 'https://example.com/hygiene/diapers' },
-        { title: '배변봉투', icon: 'mdi-trash-can', link: 'https://example.com/hygiene/poop-bags' },
-        { title: '배변판', icon: 'mdi-grid', link: 'https://example.com/hygiene/litter-box' },
-        { title: '배변패드', icon: 'mdi-napkin', link: 'https://example.com/hygiene/potty-pads' },
         { title: '탈취/소독제', icon: 'mdi-bottle-sanitizer', link: 'https://example.com/hygiene/deodorizers-disinfectants' },
         { title: '눈/귀 위생용품', icon: 'mdi-eye-outline', link: 'https://example.com/hygiene/eye-ear-care' },
         { title: '넥카라', icon: 'mdi-collar', link: 'https://example.com/hygiene/neck-collars' },
@@ -138,7 +127,6 @@ export default {
         { title: '유모차', icon: 'mdi-baby-carriage', link: 'https://example.com/strollers' },
         { title: '이동가방/이동장', icon: 'mdi-bag-carry-on', link: 'https://example.com/carriers' },
         { title: '차량용캐리어/시트', icon: 'mdi-car-seat', link: 'https://example.com/car-seats' },
-        { title: '입마개', icon: 'mdi-muzzle', link: 'https://example.com/muzzles' },
         { title: '기타', icon: 'mdi-dots-horizontal', link: 'https://example.com/outings/etc' },
       ],
       toysItem: [
