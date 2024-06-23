@@ -107,18 +107,28 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="3000">
+        {{ snackbar.message }}
+        <v-btn color="white" text @click="snackbar.show = false">닫기</v-btn>
+      </v-snackbar>
     </v-app>
   </v-col>
 </template>
 
 <script>
-import { addProduct } from '@/service/products';
+import { addProduct, getAllProducts } from '@/service/products';
 export default {
     created() {
-
+      this.fetchProducts()
     },
     data() {
         return {
+            snackbar: {
+              show: false,
+              message: '',
+              color: ''
+            },
             products: [],
             createProductData: {
                 valid: false,
@@ -203,14 +213,32 @@ export default {
             }
         },
 
+        createSnackbar(msg, isSucceeded) {
+          this.snackbar.message = msg;
+          if (isSucceeded) {
+            this.snackbar.color = 'success';
+          }
+          else {
+            this.snackbar.color = 'error';
+          }
+          this.snackbar.show = true;
+        },
+
         async saveProduct() {
             if (this.createProductData.valid) {
-                addProduct(this.createProductData.name, this.createProductData.summary, this.createProductData.quantity, this.createProductData.price ,this.createProductData.category, this.createProductData.subCategory, this.createProductData.image, this.createProductData.deliveryFee)
+               const isAdded = await addProduct(this.createProductData.name, this.createProductData.summary, this.createProductData.quantity, this.createProductData.price ,this.createProductData.category, this.createProductData.subCategory, this.createProductData.image, this.createProductData.deliveryFee)
+               if (isAdded) {
+                this.createSnackbar('상품 추가에 성공했습니다', true)
+               }
+               else {
+                this.createSnackbar('상품 추가에 실패했습니다', true)
+               }
             }
         },
 
         async fetchProducts() {
-            this.products = 1;
+            const products = await getAllProducts();
+            console.log(products)
         }
     }
 }
