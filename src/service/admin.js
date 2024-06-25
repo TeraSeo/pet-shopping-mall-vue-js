@@ -44,9 +44,9 @@ async function editUser(id, name, email, role) {
     }
 }
 
-async function delUsers(userDtos) {
+async function delUsers(users) {
     try {
-        const ids = userDtos.map(userDto => userDto.id);
+        const ids = users.map(user => user.id);
         const response = await axios.delete('http://localhost:9090/api/users/admin/delete-users', 
         {   
             headers: { userIds: ids, Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 

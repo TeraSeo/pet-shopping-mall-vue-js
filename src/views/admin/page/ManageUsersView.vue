@@ -37,7 +37,7 @@
         </v-data-table>
       </v-card>
       
-      <!-- New Role Dialog -->
+      <!-- User Creation Dialog -->
       <v-dialog v-model="createUserDialog" max-width="500px">
         <v-card>
           <v-card-title>
@@ -132,18 +132,27 @@
         </v-card>
       </v-dialog>
 
-      <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="3000">
-        {{ snackbar.message }}
-        <v-btn color="white" text @click="snackbar.show = false">닫기</v-btn>
-      </v-snackbar>
+      <ConfirmationDialogVue v-model="confirmDialog" 
+                    title="유저 삭제" 
+                    message="유저를 삭제하시겠습니까?"
+                    :onCancel="cancelDelete"
+                    :onConfirm="confirmDelete" />
+
+      <SnackBarVue v-model="snackbar.show" :message="snackbar.message" :color="snackbar.color" :onClose="removeSnackbar"/>
     </v-app>
   </v-col>
 </template>
 
 <script>
 import { getUsers, createUser, editUser, delUsers } from '@/service/admin.js';
+import SnackBarVue from '@/views/common/SnackBar.vue';
+import ConfirmationDialogVue from '@/views/common/ConfirmationDialog.vue';
 
 export default {
+  components: {
+    SnackBarVue,
+    ConfirmationDialogVue
+  },
   created() {
     this.fetchUsers();
   },
@@ -179,7 +188,9 @@ export default {
         show: false,
         message: '',
         color: ''
-      }
+      },
+
+      confirmDialog: false
     };
   },
   computed: {
@@ -213,6 +224,7 @@ export default {
       if (this.createUserData.valid) {
         const isCreated = await createUser(this.createUserData.username, this.createUserData.email, this.createUserData.password, this.createUserData.role);
         if (isCreated) {
+          await this.fetchUsers();
           this.createSnackbar('유저 생성에 성공했습니다', true)
           this.closeNewUserDialog();
         }
@@ -240,15 +252,23 @@ export default {
       }
     },
 
-    async deleteUser() {
-      const isDeleted = await delUsers(this.users.filter(user => user.checked))
+    deleteUser() {
+      this.confirmDialog = true; // Open the confirmation dialog
+    },
+
+    async confirmDelete() {
+      const isDeleted = await delUsers(this.users.filter(user => user.checked));
+      this.confirmDialog = false;
       if (isDeleted) {
         await this.fetchUsers();
-        this.createSnackbar('유저 삭제에 성공했습니다', true)
+        this.createSnackbar('유저 삭제에 성공했습니다', true);
+      } else {
+        this.createSnackbar('유저 삭제에 실패했습니다', false);
       }
-      else {
-        this.createSnackbar('유저 삭제에 실패했습니다', false)
-      }
+    },
+
+    cancelDelete() {
+      this.confirmDialog = false;
     },
 
     createSnackbar(msg, isSucceeded) {
@@ -260,6 +280,10 @@ export default {
         this.snackbar.color = 'error';
       }
       this.snackbar.show = true;
+    },
+
+    removeSnackbar() {
+      this.snackbar.show = false;
     },
 
     reloadPage() {

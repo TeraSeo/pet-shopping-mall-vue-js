@@ -11,16 +11,21 @@
           <v-btn icon @click="reloadPage">
             <v-icon>mdi-reload</v-icon>
           </v-btn>
-          <v-btn icon :disabled="!isSingleChecked">
+          <v-btn icon :disabled="!isSingleChecked" @click="openEditDialog">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn icon :disabled="!isAnyChecked">
+          <v-btn icon :disabled="!isAnyChecked" @click="deleteProducts">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-col>
-            show products
-        </v-col>
+        <v-container>
+          <v-row>
+            <v-col cols="4" v-for="product in products" :key="product.id">
+              <v-checkbox v-model="product.checked" hide-details></v-checkbox>
+              <ProductViewVue :product="product"/>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-card>
 
       <!-- New Product Dialog -->
@@ -108,19 +113,31 @@
         </v-card>
       </v-dialog>
 
-      <v-snackbar v-model="snackbar.show" :color="snackbar.color" timeout="3000">
-        {{ snackbar.message }}
-        <v-btn color="white" text @click="snackbar.show = false">닫기</v-btn>
-      </v-snackbar>
+      <ConfirmationDialogVue v-model="confirmDialog" 
+                    title="상품 삭제" 
+                    message="상품을 삭제하시겠습니까?"
+                    :onCancel="cancelDelete"
+                    :onConfirm="confirmDelete" />
+
+      <SnackBarVue v-model="snackbar.show" :message="snackbar.message" :color="snackbar.color" :onClose="removeSnackbar" />
     </v-app>
   </v-col>
 </template>
 
 <script>
-import { addProduct, getAllProducts } from '@/service/products';
+import { addProduct, delProducts, getAllProducts } from '@/service/products';
+import ProductViewVue from './product/ProductView.vue';
+import SnackBarVue from '@/views/common/SnackBar.vue';
+import ConfirmationDialogVue from '@/views/common/ConfirmationDialog.vue';
+
 export default {
     created() {
       this.fetchProducts()
+    },
+    components: {
+      ProductViewVue,
+      SnackBarVue,
+      ConfirmationDialogVue
     },
     data() {
         return {
@@ -147,7 +164,7 @@ export default {
                 quantityRules: [v => v > 0 || '수량을 입력해주세요'],
                 priceRules: [v => v > 0 || '상품 가격을 입력해주세요'],
                 deliveryFeeRules: [v => v >= 0 || '배송 비용을 입력해주세요'],
-                imageRules: [v => v && v.length > 0 && v[0].size < 2000000 || '이미지를 선택해주세요, 이미지 최대 용량은 2 MB 입니다']
+                imageRules: [v => v && v.length > 0 && v[0].size < 1000000 || '이미지를 선택해주세요, 이미지 최대 용량은 1 MB 입니다']
             },
             categories: [
                 {
@@ -192,11 +209,47 @@ export default {
                     ]
                 }
             ],
-
             createProductDataDialog: false,
+            confirmDialog: false,
         }
     },
     methods: {
+        async saveProduct() {
+            if (this.createProductData.valid) {
+               const isAdded = await addProduct(this.createProductData.name, this.createProductData.summary, this.createProductData.quantity, this.createProductData.price ,this.createProductData.category, this.createProductData.subCategory, this.createProductData.image, this.createProductData.deliveryFee)
+               if (isAdded) {
+                this.createSnackbar('상품 추가에 성공했습니다', true)
+               }
+               else {
+                this.createSnackbar('상품 추가에 실패했습니다', false)
+               }
+            }
+        },
+
+        async fetchProducts() {
+          this.products = await getAllProducts();
+        },
+
+        deleteProducts() {
+          this.confirmDialog = true; // Open the confirmation dialog
+        },
+        
+        async confirmDelete() {
+          const isDeleted = await delProducts(this.products.filter(product => product.checked));
+          this.confirmDialog = false;
+          if (isDeleted) {
+            await this.fetchProducts();
+            this.createSnackbar('상품 삭제에 성공했습니다', true);
+          } else {
+            console.log("p")
+            this.createSnackbar('상품 삭제에 실패했습니다', false);
+          }
+        },
+
+        cancelDelete() {
+          this.confirmDialog = false;
+        },
+
         openNewProductDialog() {
             this.createProductDataDialog = true;
         },
@@ -224,22 +277,21 @@ export default {
           this.snackbar.show = true;
         },
 
-        async saveProduct() {
-            if (this.createProductData.valid) {
-               const isAdded = await addProduct(this.createProductData.name, this.createProductData.summary, this.createProductData.quantity, this.createProductData.price ,this.createProductData.category, this.createProductData.subCategory, this.createProductData.image, this.createProductData.deliveryFee)
-               if (isAdded) {
-                this.createSnackbar('상품 추가에 성공했습니다', true)
-               }
-               else {
-                this.createSnackbar('상품 추가에 실패했습니다', true)
-               }
-            }
+        removeSnackbar() {
+          this.snackbar.show = false;
         },
 
-        async fetchProducts() {
-            const products = await getAllProducts();
-            console.log(products)
+        reloadPage() {
+          this.fetchProducts();
         }
+    },
+    computed: {
+      isAnyChecked() {
+        return this.products.some(product => product.checked);
+      },
+      isSingleChecked() {
+        return this.products.filter(product => product.checked).length === 1;
+      }
     }
 }
 </script>

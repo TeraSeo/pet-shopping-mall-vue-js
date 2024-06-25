@@ -1,3 +1,4 @@
+import ProductDTO from "@/dto/ProductDTO";
 import store from "@/store";
 import axios from "axios";
 
@@ -24,10 +25,37 @@ async function getAllProducts() {
         {   
             headers: { Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 
         });
-        return response.data;
+        const products = response.data.map(productData => new ProductDTO({
+            id: productData.id,
+            category: productData.category,
+            deliveryFee: productData.deliveryFee,
+            image: productData.image,
+            imagePath: productData.imagePath,
+            name: productData.name,
+            price: productData.price,
+            quantity: productData.quantity,
+            subCategory: productData.subCategory,
+            summary: productData.summary,
+            user_id: productData.user_id,
+        }));
+        return products;
     } catch(error) {
         return [];
     }
 }
 
-export { addProduct, getAllProducts }
+async function delProducts(products) {
+    try {
+        const ids = products.map(product => product.id);
+        const imagePaths = products.map(product => product.imagePath);
+        const response = await axios.delete('http://localhost:9090/api/product/delete/products', 
+        {   
+            headers: { productIds: ids, imagePaths: imagePaths, Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 
+        });
+        return response.data;
+    } catch(error) {
+        return false;
+    }
+}
+
+export { addProduct, getAllProducts, delProducts }
