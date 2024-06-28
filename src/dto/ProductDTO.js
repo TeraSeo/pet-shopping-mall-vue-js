@@ -1,5 +1,5 @@
 class ProductDTO {
-    constructor({ id, checked = false, category, deliveryFee, image, imagePath, name, price, quantity, subCategory, summary, user_id }) {
+    constructor({ id, checked = false, category, deliveryFee, image, imagePath, name, price, quantity, subCategory, user_id }) {
       this.id = id;
       this.checked = checked;
       this.category = category;
@@ -10,7 +10,6 @@ class ProductDTO {
       this.price = price;
       this.quantity = quantity;
       this.subCategory = subCategory;
-      this.summary = summary;
       this.user_id = user_id;
     }
   }

@@ -3,7 +3,7 @@
     <v-row>
       <v-col id="sidebar" sm=2>
         <div class="admin-label ml-10 mt-7 mb-7">
-          <h3>Zero Cat</h3>
+          <h3 @click="redirectToHome">Zero Cat</h3>
         </div>
         <v-list>
           <v-list-item v-for="item in menuItems" :key="item.title" @click="selectMenuItem(item)" :style="{ background: selectedMenuItem === item ? '#5E49C3' : '' }">
@@ -79,6 +79,7 @@ import Statistics from '@/views/admin/page/StatisticsView.vue';
 import Finance from '@/views/admin/page/FinanceView.vue';
 import FAQ from '@/views/admin/page/FAQView.vue';
 import ProductsViewVue from './page/ProductsView.vue';
+import router from '@/router';
 
 export default {
   components: {
@@ -111,6 +112,9 @@ export default {
       this.selectedMenuItem = item;
       this.currentComponent = item.component;
     },
+    redirectToHome() {
+      router.push({ path: "/" })
+    }
   },
   mounted() {
     this.selectedMenuItem = this.menuItems[0];

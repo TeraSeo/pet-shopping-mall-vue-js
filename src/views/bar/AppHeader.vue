@@ -16,7 +16,7 @@
           ></v-text-field>
         </v-card-text>
         <v-spacer id="space"></v-spacer>
-        <h2 class="title">제로캣</h2>
+        <h2 class="title" @click="redirectToHome">제로캣</h2>
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-xs-only">
           <v-btn text v-for="item in menuItems" :key="item.title" :to="item.path">
@@ -61,10 +61,11 @@
 <script>
 import _ from 'lodash';
 import { checkIsLoggedIn } from '@/auth.js';
+import router from '@/router';
 
 export default {
   created() {
-    this.fetchLoginStatus(); // check is logged in 
+    this.fetchLoginStatus(); // check is logged in
   },
   data() {
     return {
@@ -73,78 +74,78 @@ export default {
       loading: false,
 
       snackItems: [
-        { title: '비스켓/스낵', icon: 'mdi-cookie', link: 'https://example.com/snack/biscuits-snacks' },
-        { title: '수제간식', icon: 'mdi-chef-hat', link: 'https://example.com/snack/homemade-snacks' },
-        { title: '캔/파우치', icon: 'mdi-can-food', link: 'https://example.com/snack/canned-foods' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/snack/etc' },
+        { title: '비스켓/스낵', icon: 'mdi-cookie', link: '/home/간식/비스켓-스낵' },
+        { title: '수제간식', icon: 'mdi-chef-hat', link: '/home/간식/수제간식' },
+        { title: '캔/파우치', icon: 'mdi-can-food', link: '/home/간식/캔-파우치' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/간식/기타' },
       ],
       foodItems: [
-        { title: '건식사료', icon: 'mdi-cereal', link: 'https://example.com/food/dry-food' },
-        { title: '습식사료', icon: 'mdi-food-steak', link: 'https://example.com/food/wet-food' },
-        { title: '우유/분유', icon: 'mdi-bottle-soda', link: 'https://example.com/food/milk' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/food/etc' },
+        { title: '건식사료', icon: 'mdi-cereal', link: '/home/사료/건식사료' },
+        { title: '습식사료', icon: 'mdi-food-steak', link: '/home/사료/습식사료' },
+        { title: '우유/분유', icon: 'mdi-bottle-soda', link: '/home/사료/우유-분유' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/사료/기타' },
       ],
       groomingItems: [
-        { title: '드라이기', icon: 'mdi-hair-dryer', link: 'https://example.com/grooming/dryers' },
-        { title: '발톱관리용품', icon: 'mdi-paw-off', link: 'https://example.com/grooming/nail-care' },
-        { title: '샤워기/타월', icon: 'mdi-shower-head', link: 'https://example.com/grooming/shower-tools' },
-        { title: '샴푸/린스', icon: 'mdi-shampoo', link: 'https://example.com/grooming/shampoos' },
-        { title: '이발기/가위', icon: 'mdi-scissors-cutting', link: 'https://example.com/grooming/clippers-scissors' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/grooming/etc' },
+        { title: '드라이기', icon: 'mdi-hair-dryer', link: '/home/미용용품/드라이기' },
+        { title: '발톱관리용품', icon: 'mdi-paw-off', link: '/home/미용용품/발톱관리용품' },
+        { title: '샤워기/타월', icon: 'mdi-shower-head', link: '/home/미용용품/샤워기-타월' },
+        { title: '샴푸/린스', icon: 'mdi-shampoo', link: '/home/미용용품/샴푸-린스' },
+        { title: '이발기/가위', icon: 'mdi-scissors-cutting', link: '/home/미용용품/이발기-가위' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/미용용품/기타' },
       ],
       fashionItems: [
-        { title: '레인코트', icon: 'mdi-umbrella', link: 'https://example.com/fashion/raincoats' },
-        { title: '신발/양말', icon: 'mdi-shoe-formal', link: 'https://example.com/fashion/shoes-socks' },
-        { title: '외투', icon: 'mdi-coat-rack', link: 'https://example.com/fashion/coats' },
-        { title: '원피스/올인원', icon: 'mdi-tshirt-crew-outline', link: 'https://example.com/fashion/dresses' },
-        { title: '코스튬', icon: 'mdi-theater', link: 'https://example.com/fashion/costumes' },
-        { title: '셔츠/상의', icon: 'mdi-tshirt-crew', link: 'https://example.com/fashion/shirts' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/fashion/etc' },
+        { title: '레인코트', icon: 'mdi-umbrella', link: '/home/패션용품/레인코트' },
+        { title: '신발/양말', icon: 'mdi-shoe-formal', link: '/home/패션용품/신발-양말' },
+        { title: '외투', icon: 'mdi-coat-rack', link: '/home/패션용품/외투' },
+        { title: '원피스/올인원', icon: 'mdi-tshirt-crew-outline', link: '/home/패션용품/원피스-올인원' },
+        { title: '코스튬', icon: 'mdi-theater', link: '/home/패션용품/코스튬' },
+        { title: '셔츠/상의', icon: 'mdi-tshirt-crew', link: '/home/패션용품/셔츠-상의' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/패션용품/기타' },
       ],
       hygieneItems: [
-        { title: '구강위생용품', icon: 'mdi-toothbrush', link: 'https://example.com/hygiene/oral-care' },
-        { title: '탈취/소독제', icon: 'mdi-bottle-sanitizer', link: 'https://example.com/hygiene/deodorizers-disinfectants' },
-        { title: '눈/귀 위생용품', icon: 'mdi-eye-outline', link: 'https://example.com/hygiene/eye-ear-care' },
-        { title: '넥카라', icon: 'mdi-collar', link: 'https://example.com/hygiene/neck-collars' },
-        { title: '해충방지용품', icon: 'mdi-bug', link: 'https://example.com/hygiene/pest-control' },
-        { title: '고양이화장실', icon: 'mdi-litter-box', link: 'https://example.com/hygiene/cat-litter-box' },
-        { title: '고양이모래', icon: 'mdi-beach', link: 'https://example.com/hygiene/cat-litter' },
-        { title: '고양이모래매트', icon: 'mdi-rug', link: 'https://example.com/hygiene/cat-litter-mat' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/hygiene/etc' },
+        { title: '구강위생용품', icon: 'mdi-toothbrush', link: '/home/위생용품/구강위생용품' },
+        { title: '탈취/소독제', icon: 'mdi-bottle-sanitizer', link: '/home/위생용품/탈취-소독제' },
+        { title: '눈/귀 위생용품', icon: 'mdi-eye-outline', link: '/home/위생용품/눈-귀-위생용품' },
+        { title: '넥카라', icon: 'mdi-collar', link: '/home/위생용품/넥카라' },
+        { title: '해충방지용품', icon: 'mdi-bug', link: '/home/위생용품/해충방지용품' },
+        { title: '고양이화장실', icon: 'mdi-litter-box', link: '/home/위생용품/고양이화장실' },
+        { title: '고양이모래', icon: 'mdi-beach', link: '/home/위생용품/고양이모래' },
+        { title: '고양이모래매트', icon: 'mdi-rug', link: '/home/위생용품/고양이모래매트' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/위생용품/기타' },
       ],
       diningWaterItems: [
-        { title: '급수기', icon: 'mdi-water-pump', link: 'https://example.com/diningWaterItems/water-dispensers' },
-        { title: '급식기', icon: 'mdi-food-bowl', link: 'https://example.com/diningWaterItems/feeding-bowls' },
-        { title: '정수기', icon: 'mdi-water', link: 'https://example.com/diningWaterItems/water-filters' },
-        { title: '사료보관통', icon: 'mdi-barrel', link: 'https://example.com/diningWaterItems/food-storage' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/diningWaterItems/etc' },
+        { title: '급수기', icon: 'mdi-water-pump', link: '/home/식기-급수기/급수기' },
+        { title: '급식기', icon: 'mdi-food-bowl', link: '/home/식기-급수기/급식기' },
+        { title: '정수기', icon: 'mdi-water', link: '/home/식기-급수기/정수기' },
+        { title: '사료보관통', icon: 'mdi-barrel', link: '/home/식기-급수기/사료보관통' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/식기-급수기/기타' },
       ],
       outingItems: [
-        { title: '가슴줄', icon: 'mdi-leash', link: 'https://example.com/leashes/humid' }, // Assuming 가습줄 means a special type of leash
-        { title: '리드줄', icon: 'mdi-leash', link: 'https://example.com/leashes/lead' },
-        { title: '목걸이/인식표', icon: 'mdi-tag-heart', link: 'https://example.com/collars/tags' },
-        { title: '목줄', icon: 'mdi-leash', link: 'https://example.com/leashes' },
-        { title: '유모차', icon: 'mdi-baby-carriage', link: 'https://example.com/strollers' },
-        { title: '이동가방/이동장', icon: 'mdi-bag-carry-on', link: 'https://example.com/carriers' },
-        { title: '차량용캐리어/시트', icon: 'mdi-car-seat', link: 'https://example.com/car-seats' },
-        { title: '기타', icon: 'mdi-dots-horizontal', link: 'https://example.com/outings/etc' },
+        { title: '가슴줄', icon: 'mdi-leash', link: '/home/외출용품/가슴줄' }, // Assuming 가습줄 means a special type of leash
+        { title: '리드줄', icon: 'mdi-leash', link: '/home/외출용품/리드줄' },
+        { title: '목걸이/인식표', icon: 'mdi-tag-heart', link: '/home/외출용품/목걸이-인식표' },
+        { title: '목줄', icon: 'mdi-leash', link: '/home/외출용품/목줄' },
+        { title: '유모차', icon: 'mdi-baby-carriage', link: '/home/외출용품/유모차' },
+        { title: '이동가방/이동장', icon: 'mdi-bag-carry-on', link: '/home/외출용품/이동가방-이동장' },
+        { title: '차량용캐리어/시트', icon: 'mdi-car-seat', link: '/home/외출용품/차량용캐리어-시트' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/외출용품/기타' },
       ],
       toysItem: [
-        { title: '공/원반', icon: 'mdi-soccer', link: 'https://example.com/toys/balls-discs' },
-        { title: '인형', icon: 'mdi-human-child', link: 'https://example.com/toys/dolls' },
-        { title: '터널/큐브', icon: 'mdi-tunnel-outline', link: 'https://example.com/toys/tunnels-cubes' },
-        { title: '캣타워', icon: 'mdi-tower-beach', link: 'https://example.com/toys/cat-towers' },
-        { title: '고양이스크래쳐', icon: 'mdi-scratcher', link: 'https://example.com/toys/cat-scratchers' },
-        { title: '고양이장난감', icon: 'mdi-cat', link: 'https://example.com/toys/cat-toys' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/toys/etc' },
+        { title: '공/원반', icon: 'mdi-soccer', link: '/home/장난감/공-원반' },
+        { title: '인형', icon: 'mdi-human-child', link: '/home/장난감/인형' },
+        { title: '터널/큐브', icon: 'mdi-tunnel-outline', link: '/home/장난감/터널-큐브' },
+        { title: '캣타워', icon: 'mdi-tower-beach', link: '/home/장난감/캣타워' },
+        { title: '고양이스크래쳐', icon: 'mdi-scratcher', link: '/home/장난감/고양이스크래쳐' },
+        { title: '고양이장난감', icon: 'mdi-cat', link: '/home/장난감/고양이장난감' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/장난감/기타' },
       ],
       houseSafetyItems: [
-        { title: '울타리', icon: 'mdi-fence', link: 'https://example.com/house-safety/fences' },
-        { title: '매트', icon: 'mdi-rug', link: 'https://example.com/house-safety/mats' },
-        { title: '안전문', icon: 'mdi-gate', link: 'https://example.com/house-safety/gates' },
-        { title: '쿠션/방석', icon: 'mdi-seat', link: 'https://example.com/house-safety/cushions' },
-        { title: '하우스', icon: 'mdi-dog-side', link: 'https://example.com/house-safety/houses' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/house-safety/etc' },
+        { title: '울타리', icon: 'mdi-fence', link: '/home/하우스-안전용품/울타리' },
+        { title: '매트', icon: 'mdi-rug', link: '/home/하우스-안전용/매트' },
+        { title: '안전문', icon: 'mdi-gate', link: '/home/하우스-안전용/안전문' },
+        { title: '쿠션/방석', icon: 'mdi-seat', link: '/home/하우스-안전용/쿠션-방석' },
+        { title: '하우스', icon: 'mdi-dog-side', link: '/home/하우스-안전용/하우스' },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/하우스-안전용/기타' },
       ],
     };
   },
@@ -170,6 +171,9 @@ export default {
         console.error('Error checking login status:', error);
       }
     },
+    redirectToHome() {
+      router.push({ path: "/" })
+    }
   },
   computed: {
     currentItems() {

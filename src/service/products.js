@@ -5,15 +5,39 @@ import axios from "axios";
 const accessToken = store.state.accessToken; 
 const refreshToken = store.state.refreshToken;
 
-async function addProduct(name, summary, quantity, price, category, subCategory, image, deliveryFee) {
+async function addProduct(name, quantity, price, category, subCategory, image, deliveryFee) {
     try {
         const user_id = store.state.userId;
         const response = await axios.post('http://localhost:9090/api/product/add/product', 
-        {name : name, summary: summary, quantity: quantity, price: price, category: category, subCategory: subCategory, deliveryFee: deliveryFee, image: image, user_id: user_id, imagePath: ''},
+        {name : name, quantity: quantity, price: price, category: category, subCategory: subCategory, deliveryFee: deliveryFee, image: image, user_id: user_id, imagePath: ''},
         {   
             headers: { 'Content-Type': 'multipart/form-data', Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 
         });
         return response.data;
+    } catch(error) {
+        return false;
+    }
+}
+
+async function editProduct(id, name, quantity, price, category, subCategory, image, deliveryFee, imagePath) {
+    try {
+        console.log(imagePath)
+        if (image == '') {
+            const response = await axios.put('http://localhost:9090/api/product/edit/product/without/image', 
+            {id: id, name : name, quantity: quantity, price: price, category: category, subCategory: subCategory, deliveryFee: deliveryFee},
+            {   
+                headers: { Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 
+            });
+            return response.data;
+        }
+        else {
+            const response = await axios.put('http://localhost:9090/api/product/edit/product', 
+            {id: id, name : name, quantity: quantity, price: price, category: category, subCategory: subCategory, deliveryFee: deliveryFee, image: image, imagePath: imagePath},
+            {   
+                headers: { 'Content-Type': 'multipart/form-data', Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 
+            });
+            return response.data;
+        }
     } catch(error) {
         return false;
     }
@@ -35,7 +59,6 @@ async function getAllProducts() {
             price: productData.price,
             quantity: productData.quantity,
             subCategory: productData.subCategory,
-            summary: productData.summary,
             user_id: productData.user_id,
         }));
         return products;
@@ -58,4 +81,28 @@ async function delProducts(products) {
     }
 }
 
-export { addProduct, getAllProducts, delProducts }
+async function getProductsBySubCategory(category, subCategory) {
+    const response = await axios.get('http://localhost:9090/api/product/get/by/sub/category', 
+    {   
+        params: {
+            'category': category,
+            'subCategory': subCategory
+        },
+        headers: { Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 
+    });
+    const products = response.data.map(productData => new ProductDTO({
+        id: productData.id,
+        category: productData.category,
+        deliveryFee: productData.deliveryFee,
+        image: productData.image,
+        imagePath: productData.imagePath,
+        name: productData.name,
+        price: productData.price,
+        quantity: productData.quantity,
+        subCategory: productData.subCategory,
+        user_id: productData.user_id,
+    }));
+    return products;
+}
+
+export { addProduct, editProduct, getAllProducts, delProducts, getProductsBySubCategory }
