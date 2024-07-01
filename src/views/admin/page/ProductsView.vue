@@ -271,43 +271,78 @@ export default {
                 {
                     name: '간식',
                     subcategories: [
-                        { title: '비스켓/스낵', icon: 'mdi-cookie', link: 'https://example.com/snack/biscuits-snacks' },
-                        { title: '수제간식', icon: 'mdi-chef-hat', link: 'https://example.com/snack/homemade-snacks' },
-                        { title: '캔/파우치', icon: 'mdi-can-food', link: 'https://example.com/snack/canned-foods' },
-                        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/snack/etc' },
+                        { title: '비스켓/스낵' },
+                        { title: '수제간식' },
+                        { title: '캔/파우치' },
+                        { title: '기타' },
                     ]
                 },
                 {
                     name: '사료',
                     subcategories: [
-                        { title: '건식사료', icon: 'mdi-cereal', link: 'https://example.com/food/dry-food' },
-                        { title: '습식사료', icon: 'mdi-food-steak', link: 'https://example.com/food/wet-food' },
-                        { title: '우유/분유', icon: 'mdi-bottle-soda', link: 'https://example.com/food/milk' },
-                        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/food/etc' },
+                        { title: '건식사료' },
+                        { title: '습식사료' },
+                        { title: '우유/분유' },
+                        { title: '기타' },
                     ]
                 },
                 {
                     name: '미용용품',
                     subcategories: [
-                        { title: '드라이기', icon: 'mdi-hair-dryer', link: 'https://example.com/grooming/dryers' },
-                        { title: '발톱관리용품', icon: 'mdi-paw-off', link: 'https://example.com/grooming/nail-care' },
-                        { title: '샤워기/타월', icon: 'mdi-shower-head', link: 'https://example.com/grooming/shower-tools' },
-                        { title: '샴푸/린스', icon: 'mdi-shampoo', link: 'https://example.com/grooming/shampoos' },
-                        { title: '이발기/가위', icon: 'mdi-scissors-cutting', link: 'https://example.com/grooming/clippers-scissors' },
-                        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/grooming/etc' },
+                        { title: '드라이기' },
+                        { title: '발톱관리용품' },
+                        { title: '샤워기/타월' },
+                        { title: '샴푸/린스' },
+                        { title: '이발기/가위' },
+                        { title: '기타' },
                     ]
                 },
                 {
-                    name: '패션용품',
-                    subcategories: [
-                        { title: '레인코트', icon: 'mdi-umbrella', link: 'https://example.com/fashion/raincoats' },
-                        { title: '신발/양말', icon: 'mdi-shoe-formal', link: 'https://example.com/fashion/shoes-socks' },
-                        { title: '외투', icon: 'mdi-coat-rack', link: 'https://example.com/fashion/coats' },
-                        { title: '원피스/올인원', icon: 'mdi-tshirt-crew-outline', link: 'https://example.com/fashion/dresses' },
-                        { title: '코스튬', icon: 'mdi-theater', link: 'https://example.com/fashion/costumes' },
-                        { title: '셔츠/상의', icon: 'mdi-tshirt-crew', link: 'https://example.com/fashion/shirts' },
-                        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: 'https://example.com/fashion/etc' },
-                    ]
+                  name: '위생용품',
+                  subcategories: [
+                    { title: '구강위생용품' },
+                    { title: '탈취/소독제' },
+                    { title: '눈/귀 위생용품' },
+                    { title: '넥카라' },
+                    { title: '해충방지용품' },
+                    { title: '고양이화장실' },
+                    { title: '고양이모래' },
+                    { title: '고양이모래매트' },
+                    { title: '기타' },
+                  ]
+                },
+                {
+                  name: '식기/급수기',
+                  subcategories: [
+                    { title: '급수기' },
+                    { title: '급식기' },
+                    { title: '정수기' },
+                    { title: '사료보관통' },
+                    { title: '기타' },
+                  ]
+                },
+                {
+                  name: '장난감',
+                  subcategories: [
+                    { title: '공/원반' },
+                    { title: '인형' },
+                    { title: '터널/큐브' },
+                    { title: '캣타워' },
+                    { title: '고양이스크래쳐' },
+                    { title: '고양이장난감' },
+                    { title: '기타' },
+                  ]
+                },
+                {
+                  name: '하우스/안전용품',
+                  subcategories: [
+                    { title: '울타리' },
+                    { title: '매트' },
+                    { title: '안전문' },
+                    { title: '쿠션/방석' },
+                    { title: '하우스' },
+                    { title: '기타' },
+                  ]
                 }
             ],
             editProductDialog: false,
@@ -322,6 +357,7 @@ export default {
                if (isAdded) {
                 await this.fetchProducts();
                 this.createSnackbar('상품 추가에 성공했습니다', true)
+                this.clearAddProductField();
                }
                else {
                 this.createSnackbar('상품 추가에 실패했습니다', false)
@@ -336,7 +372,7 @@ export default {
 
         async editProduct() {
           if (this.editProductData.valid) {
-            const isEdited = await editProduct(this.editProductData.id, this.editProductData.name, this.editProductData.quantity, this.editProductData.price ,this.editProductData.category, this.editProductData.subCategory, this.editProductData.image, this.editProductData.deliveryFe, this.editProductData.originalPath)
+            const isEdited = await editProduct(this.editProductData.id, this.editProductData.name, this.editProductData.quantity, this.editProductData.price ,this.editProductData.category, this.editProductData.subCategory, this.editProductData.image, this.editProductData.deliveryFee, this.editProductData.originalPath)
             if (isEdited) {
               await this.fetchProducts();
               this.createSnackbar('상품 수정에 성공했습니다', true)
@@ -431,6 +467,19 @@ export default {
 
         reloadPage() {
           this.fetchProducts();
+        },
+
+        clearAddProductField() {
+          this.createProductData.valid = false;
+          this.createProductData.name = '';
+          this.createProductData.subCategory = '';
+          this.createProductData.subcategories = [];
+          this.createProductData.image = '';
+          this.createProductData.quantity = 0;
+          this.createProductData.price = 0;
+          this.createProductData.deliveryFee = 0;
+          this.createProductData.category = '';
+          this.createProductData.category = '';
         }
     },
     computed: {

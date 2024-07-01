@@ -21,7 +21,13 @@ async function addProduct(name, quantity, price, category, subCategory, image, d
 
 async function editProduct(id, name, quantity, price, category, subCategory, image, deliveryFee, imagePath) {
     try {
-        console.log(imagePath)
+        if (category == "식기/급수기") {
+            category = "식기";
+        }
+        else if (category == "하우스/안전용품") {
+            category = "하우스";
+        }
+        console.log(category)
         if (image == '') {
             const response = await axios.put('http://localhost:9090/api/product/edit/product/without/image', 
             {id: id, name : name, quantity: quantity, price: price, category: category, subCategory: subCategory, deliveryFee: deliveryFee},
@@ -69,14 +75,15 @@ async function getAllProducts() {
 
 async function delProducts(products) {
     try {
+        console.log(products)
         const ids = products.map(product => product.id);
-        const imagePaths = products.map(product => product.imagePath);
         const response = await axios.delete('http://localhost:9090/api/product/delete/products', 
-        {   
-            headers: { productIds: ids, imagePaths: imagePaths, Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 
+        {
+            headers: { productIds: ids, Authorization: "Bearer " + accessToken, Refresh: "Bearer " + refreshToken } 
         });
         return response.data;
     } catch(error) {
+        console.log(error)
         return false;
     }
 }

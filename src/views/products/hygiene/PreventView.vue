@@ -9,8 +9,9 @@
 </template>
 
 <script>
-import { getAllProducts } from '@/service/products';
-import ProductViewVue from '../admin/page/product/ProductView.vue';
+import { getProductsBySubCategory } from '@/service/products';
+import ProductViewVue from '@/views/admin/page/product/ProductView.vue';
+
 export default {
   components: {
     ProductViewVue
@@ -25,11 +26,12 @@ export default {
   },
   methods: {
     async fetchProducts() {
-      this.products = await getAllProducts();
+      this.products = await getProductsBySubCategory('위생용품', '해충방지용품');
     },
   }
 }
 </script>
 
 <style>
+
 </style>

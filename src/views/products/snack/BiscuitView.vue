@@ -1,8 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="4" v-for="product in products" :key="product.id">
-        <v-checkbox v-model="product.checked" hide-details></v-checkbox>
+      <v-col cols="3" v-for="product in products" :key="product.id">
         <ProductViewVue :product="product"/>
       </v-col>
     </v-row>

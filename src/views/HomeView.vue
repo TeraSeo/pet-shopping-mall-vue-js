@@ -32,10 +32,8 @@
             <v-btn class="menu-item" @mouseover="showMenu('snack')"> <v-col><h3>간식</h3><div class="underline" v-if="currentMenu === 'snack'"></div></v-col> </v-btn>
             <v-btn class="menu-item" @mouseover="showMenu('food')"> <v-col><h3>사료</h3><div class="underline" v-if="currentMenu === 'food'"></div></v-col> </v-btn>
             <v-btn class="menu-item" @mouseover="showMenu('grooming')"> <v-col><h3>미용용품</h3><div class="underline" v-if="currentMenu === 'grooming'"></div></v-col> </v-btn>
-            <v-btn class="menu-item" @mouseover="showMenu('fashion')"> <v-col><h3>패션용품</h3><div class="underline" v-if="currentMenu === 'fashion'"></div></v-col> </v-btn>
             <v-btn class="menu-item" @mouseover="showMenu('hygiene')"> <v-col><h3>위생용품</h3><div class="underline" v-if="currentMenu === 'hygiene'"></div></v-col> </v-btn>
             <v-btn class="menu-item" @mouseover="showMenu('diningWater')"> <v-col><h3>식기/급수기</h3><div class="underline" v-if="currentMenu === 'diningWater'"></div></v-col> </v-btn>
-            <v-btn class="menu-item" @mouseover="showMenu('outing')"> <v-col><h3>외출용품</h3><div class="underline" v-if="currentMenu === 'outing'"></div></v-col> </v-btn>
             <v-btn class="menu-item" @mouseover="showMenu('toys')"> <v-col><h3>장난감</h3><div class="underline" v-if="currentMenu === 'toys'"></div></v-col> </v-btn>
             <v-btn class="menu-item" @mouseover="showMenu('houseSafety')"> <v-col><h3>하우스/안전용품</h3><div class="underline" v-if="currentMenu === 'houseSafety'"></div></v-col> </v-btn>
             <v-spacer></v-spacer>
@@ -70,7 +68,29 @@ import store from '@/store';
 import { setUserIdByEmail, checkIsLoggedIn } from '@/auth';
 import _ from 'lodash';
 import BiscuitViewVue from './products/snack/BiscuitView.vue';
+import HandMadeSnackViewVue from './products/snack/HandMadeSnackView.vue';
+import CanPouchViewVue from './products/snack/CanPouchView.vue';
+import SnackEtcViewVue from './products/snack/SnackEtcView.vue';
+import DryViewVue from './products/food/DryView.vue';
+import MoistViewVue from './products/food/MoistView.vue';
+import MilkViewVue from './products/food/MilkView.vue';
+import FoodEtcViewVue from './products/food/FoodEtcView.vue';
+import DryingViewVue from './products/grooming/DryingView.vue';
+import NailManageViewVue from './products/grooming/NailManageView.vue';
+import ShowerViewVue from './products/grooming/ShowerView.vue';
+import ShampooViewVue from './products/grooming/ShampooView.vue';
+import CutViewVue from './products/grooming/CutView.vue';
+import GroomingEtcViewVue from './products/grooming/GroomingEtcView.vue';
 import HomePageVue from './products/HomePage.vue';
+import CatSandMatViewVue from './products/hygiene/CatSandMatView.vue';
+import CatSandViewVue from './products/hygiene/CatSandView.vue';
+import CatToiletViewVue from './products/hygiene/CatToiletView.vue';
+import EyeEarViewVue from './products/hygiene/EyeEarView.vue';
+import HygieneEtcVue from './products/hygiene/HygieneEtc.vue';
+import MouseViewVue from './products/hygiene/MouseView.vue';
+import NeckViewVue from './products/hygiene/NeckView.vue';
+import PreventViewVue from './products/hygiene/PreventView.vue';
+import SmellViewVue from './products/hygiene/SmellView.vue';
 
 export default {
   created() {
@@ -82,7 +102,29 @@ export default {
   components: {
     AppFooter,
     HomePageVue,
-    BiscuitViewVue
+    BiscuitViewVue,
+    HandMadeSnackViewVue,
+    CanPouchViewVue,
+    SnackEtcViewVue,
+    DryViewVue,
+    MoistViewVue,
+    MilkViewVue,
+    FoodEtcViewVue,
+    DryingViewVue,
+    NailManageViewVue,
+    ShowerViewVue,
+    ShampooViewVue,
+    CutViewVue,
+    GroomingEtcViewVue,
+    CatSandMatViewVue,
+    CatSandViewVue,
+    CatToiletViewVue,
+    EyeEarViewVue,
+    HygieneEtcVue,
+    MouseViewVue,
+    NeckViewVue,
+    PreventViewVue,
+    SmellViewVue
   },
   data() {
     return {
@@ -94,43 +136,34 @@ export default {
 
       snackItems: [
         { title: '비스켓/스낵', icon: 'mdi-cookie', component: BiscuitViewVue },
-        { title: '수제간식', icon: 'mdi-chef-hat', link: '/home/간식/수제간식' },
-        { title: '캔/파우치', icon: 'mdi-can-food', link: '/home/간식/캔-파우치' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/간식/기타' },
+        { title: '수제간식', icon: 'mdi-chef-hat', component: HandMadeSnackViewVue },
+        { title: '캔/파우치', icon: 'mdi-can-food', component: CanPouchViewVue },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', component: SnackEtcViewVue },
       ],
       foodItems: [
-        { title: '건식사료', icon: 'mdi-cereal', link: '/home/사료/건식사료' },
-        { title: '습식사료', icon: 'mdi-food-steak', link: '/home/사료/습식사료' },
-        { title: '우유/분유', icon: 'mdi-bottle-soda', link: '/home/사료/우유-분유' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/사료/기타' },
+        { title: '건식사료', icon: 'mdi-cereal', component: DryViewVue },
+        { title: '습식사료', icon: 'mdi-food-steak', component: MoistViewVue },
+        { title: '우유/분유', icon: 'mdi-bottle-soda', component: MilkViewVue },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', component: FoodEtcViewVue },
       ],
       groomingItems: [
-        { title: '드라이기', icon: 'mdi-hair-dryer', link: '/home/미용용품/드라이기' },
-        { title: '발톱관리용품', icon: 'mdi-paw-off', link: '/home/미용용품/발톱관리용품' },
-        { title: '샤워기/타월', icon: 'mdi-shower-head', link: '/home/미용용품/샤워기-타월' },
-        { title: '샴푸/린스', icon: 'mdi-shampoo', link: '/home/미용용품/샴푸-린스' },
-        { title: '이발기/가위', icon: 'mdi-scissors-cutting', link: '/home/미용용품/이발기-가위' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/미용용품/기타' },
-      ],
-      fashionItems: [
-        { title: '레인코트', icon: 'mdi-umbrella', link: '/home/패션용품/레인코트' },
-        { title: '신발/양말', icon: 'mdi-shoe-formal', link: '/home/패션용품/신발-양말' },
-        { title: '외투', icon: 'mdi-coat-rack', link: '/home/패션용품/외투' },
-        { title: '원피스/올인원', icon: 'mdi-tshirt-crew-outline', link: '/home/패션용품/원피스-올인원' },
-        { title: '코스튬', icon: 'mdi-theater', link: '/home/패션용품/코스튬' },
-        { title: '셔츠/상의', icon: 'mdi-tshirt-crew', link: '/home/패션용품/셔츠-상의' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/패션용품/기타' },
+        { title: '드라이기', icon: 'mdi-hair-dryer', component: DryingViewVue },
+        { title: '발톱관리용품', icon: 'mdi-paw-off', component: NailManageViewVue },
+        { title: '샤워기/타월', icon: 'mdi-shower-head', component: ShowerViewVue },
+        { title: '샴푸/린스', icon: 'mdi-shampoo', component: ShampooViewVue },
+        { title: '이발기/가위', icon: 'mdi-scissors-cutting', component: CutViewVue },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', component: GroomingEtcViewVue },
       ],
       hygieneItems: [
-        { title: '구강위생용품', icon: 'mdi-toothbrush', link: '/home/위생용품/구강위생용품' },
-        { title: '탈취/소독제', icon: 'mdi-bottle-sanitizer', link: '/home/위생용품/탈취-소독제' },
-        { title: '눈/귀 위생용품', icon: 'mdi-eye-outline', link: '/home/위생용품/눈-귀-위생용품' },
-        { title: '넥카라', icon: 'mdi-collar', link: '/home/위생용품/넥카라' },
-        { title: '해충방지용품', icon: 'mdi-bug', link: '/home/위생용품/해충방지용품' },
-        { title: '고양이화장실', icon: 'mdi-litter-box', link: '/home/위생용품/고양이화장실' },
-        { title: '고양이모래', icon: 'mdi-beach', link: '/home/위생용품/고양이모래' },
-        { title: '고양이모래매트', icon: 'mdi-rug', link: '/home/위생용품/고양이모래매트' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/위생용품/기타' },
+        { title: '구강위생용품', icon: 'mdi-toothbrush', component: MouseViewVue },
+        { title: '탈취/소독제', icon: 'mdi-bottle-sanitizer', component: SmellViewVue },
+        { title: '눈/귀 위생용품', icon: 'mdi-eye-outline', component: EyeEarViewVue },
+        { title: '넥카라', icon: 'mdi-collar', component: NeckViewVue },
+        { title: '해충방지용품', icon: 'mdi-bug', component: PreventViewVue },
+        { title: '고양이화장실', icon: 'mdi-litter-box', component: CatToiletViewVue },
+        { title: '고양이모래', icon: 'mdi-beach', component: CatSandViewVue },
+        { title: '고양이모래매트', icon: 'mdi-rug', component: CatSandMatViewVue },
+        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', component: HygieneEtcVue },
       ],
       diningWaterItems: [
         { title: '급수기', icon: 'mdi-water-pump', link: '/home/식기-급수기/급수기' },
@@ -138,16 +171,6 @@ export default {
         { title: '정수기', icon: 'mdi-water', link: '/home/식기-급수기/정수기' },
         { title: '사료보관통', icon: 'mdi-barrel', link: '/home/식기-급수기/사료보관통' },
         { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/식기-급수기/기타' },
-      ],
-      outingItems: [
-        { title: '가슴줄', icon: 'mdi-leash', link: '/home/외출용품/가슴줄' }, // Assuming 가습줄 means a special type of leash
-        { title: '리드줄', icon: 'mdi-leash', link: '/home/외출용품/리드줄' },
-        { title: '목걸이/인식표', icon: 'mdi-tag-heart', link: '/home/외출용품/목걸이-인식표' },
-        { title: '목줄', icon: 'mdi-leash', link: '/home/외출용품/목줄' },
-        { title: '유모차', icon: 'mdi-baby-carriage', link: '/home/외출용품/유모차' },
-        { title: '이동가방/이동장', icon: 'mdi-bag-carry-on', link: '/home/외출용품/이동가방-이동장' },
-        { title: '차량용캐리어/시트', icon: 'mdi-car-seat', link: '/home/외출용품/차량용캐리어-시트' },
-        { title: '기타', icon: 'mdi-dots-horizontal-circle-outline', link: '/home/외출용품/기타' },
       ],
       toysItem: [
         { title: '공/원반', icon: 'mdi-soccer', link: '/home/장난감/공-원반' },
@@ -212,8 +235,6 @@ export default {
           return this.hygieneItems;
         case 'diningWater':
           return this.diningWaterItems;
-        case 'outing':
-          return this.outingItems;
         case 'toys':
           return this.toysItem;
         case 'houseSafety':
